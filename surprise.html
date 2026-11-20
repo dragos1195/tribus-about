@@ -415,8 +415,12 @@
 
   /* ---------------- subtitles, sitcom style ---------------- */
   var capT;
-  function caption(text, ms) {
-    var c = $('caption'); c.textContent = text; c.classList.add('show');
+  // top: optional distance from the top of the screen (used to sit right under a GIF)
+  function caption(text, ms, top) {
+    var c = $('caption'); c.textContent = text;
+    c.style.top = top == null ? '' : top + 'px';
+    c.style.bottom = top == null ? '' : 'auto';
+    c.classList.add('show');
     clearTimeout(capT); capT = setTimeout(function () { c.classList.remove('show'); }, ms || 1800);
   }
 
@@ -683,14 +687,20 @@
 
   var floatT;
   var floatN = 0;
-  function floatJoey(id, next) {
+  // shows a GIF in the middle of the screen, with its caption right below it
+  function floatJoey(id, next, text) {
     var box = $('joey-float'), n = ++floatN;
     clearTimeout(floatT);
     box.classList.remove('show');
     loadGif(id, function (ok) {
-      if (n !== floatN || !ok) return;   // a newer tap won, or the GIF failed
+      if (n !== floatN) return;                          // a newer tap won
+      if (!ok) { if (text) caption(text, 2600); return; } // GIF failed: caption in its usual place
       putGif(box, id);
       void box.offsetWidth; box.classList.add('show');
+      if (text) {
+        var top = innerHeight / 2 + box.offsetHeight / 2 + 14;
+        caption(text, 3600, Math.min(top, innerHeight - 140));
+      }
       floatT = setTimeout(function () { box.classList.remove('show'); }, 3800);
     });
     if (next) loadGif(next);              // get the following GIF ready
@@ -758,8 +768,7 @@
   $('baby-back').addEventListener('click', leaveBaby);
   var babyN = 0;
   $('baby-gif').addEventListener('click', function () {
-    caption(BABY_LINES[babyN % BABY_LINES.length], 2600);
-    floatJoey(BABY_GIFS[babyN % BABY_GIFS.length], BABY_GIFS[(babyN + 1) % BABY_GIFS.length]);
+    floatJoey(BABY_GIFS[babyN % BABY_GIFS.length], BABY_GIFS[(babyN + 1) % BABY_GIFS.length], BABY_LINES[babyN % BABY_LINES.length]);
     babyConfetti(60);
     babyN++;
   });
@@ -782,8 +791,7 @@
   var moreN = 0;
   $('again').addEventListener('click', function () {
     finale();
-    caption(MORE[moreN % MORE.length], 2600);
-    floatJoey(JOEY.more[moreN % JOEY.more.length], JOEY.more[(moreN + 1) % JOEY.more.length]);
+    floatJoey(JOEY.more[moreN % JOEY.more.length], JOEY.more[(moreN + 1) % JOEY.more.length], MORE[moreN % MORE.length]);
     moreN++;
     // EDIT ME: how many fireworks taps before the 🍼 button shows up
     if (moreN === 5) { var bb = $('baby'); bb.hidden = false; bb.classList.add('arrive'); setTimeout(function () { caption('*publicul: ce-i asta?!* 👀', 2600); }, 2700); }
