@@ -318,7 +318,7 @@
     <div class="yes-title dotted" aria-label="Au zis da">AU<i class="dot r"></i>ZIS<i class="dot y"></i>DA!</div>
     <p class="yes-sub">🎉 Cel mai bun episod de până acum! 🎉</p>
     <!-- Joey GIFs come from GIPHY (needs internet). Change the IDs in JOEY below. -->
-    <!-- Joey's "YES!" GIF, which turns into your photo after 1 second. EDIT ME: surprise/photo-yes.jpg -->
+    <!-- Joey's "YES!" GIF, which turns into your photo after 3 seconds. EDIT ME: surprise/photo-yes.jpg -->
     <div class="joey" id="joey" style="display:none"><div class="joey-media"><img id="joey-img" alt="Joey se bucură"><img class="yes-photo" src="surprise/photo-yes.jpg" alt="Noi, când ați zis DA"></div><small>via GIPHY</small></div>
 
     <div class="cflip" id="cflip">
@@ -636,9 +636,9 @@
     im.alt = old.alt; im.id = old.id;
     old.parentNode.replaceChild(im, old);
   }
-  // the "yes" box: Joey's GIF first, then after 1 second it turns into the photo.
+  // the "yes" box: Joey's GIF first, then after 3 seconds it turns into the photo.
   // The box has a fixed shape, so nothing below it jumps. If the GIF is slow or
-  // can't load, the photo still shows after 1 second.
+  // can't load, the photo still shows after 3 seconds.
   var yesT;
   function joey(id) {
     var box = $('joey');
@@ -647,7 +647,7 @@
     box.classList.remove('pop'); void box.offsetWidth; box.classList.add('pop');
     loadGif(id, function (ok) { if (ok && !box.classList.contains('photo')) putGif(box, id); });
     clearTimeout(yesT);
-    yesT = setTimeout(function () { box.classList.add('photo'); }, 1000);   // EDIT ME: delay in ms
+    yesT = setTimeout(function () { box.classList.add('photo'); }, 3000);   // EDIT ME: delay in ms
   }
 
   /* ---------------- the gift: flip the contract ---------------- */
