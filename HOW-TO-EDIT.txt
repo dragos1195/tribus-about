@@ -7,7 +7,8 @@ Edit the surprise
     captions, the question, what the runaway "Nu" button says, the funny
     contract, the captions for the fireworks button and the Joey GIFs.
   - Photos: surprise/photo-front.jpg (serious, front) and
-    surprise/photo-back.jpg (funny, back). The baby page uses
+    surprise/photo-back.jpg (funny, back). After DA, Joey's GIF turns into
+    surprise/photo-yes.jpg after 1 second. The baby page uses
     surprise/photo-kids.jpg. Replace the files to change them.
     Portrait 4:5 looks best.
   - Joey GIFs come from GIPHY, so they need an internet connection. To swap one,
