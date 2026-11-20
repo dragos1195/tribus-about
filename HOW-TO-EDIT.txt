@@ -28,6 +28,11 @@ Deploy (any static host works, pick one)
   - Vercel / Cloudflare Pages / GitHub Pages: upload this folder as-is,
     no build step. index.html is the entry page.
 
+Use it as a phone app
+  - manifest.webmanifest and sw.js let the site be added to the home screen.
+    It then opens full screen, and the surprise and profile pages open inside
+    the app. Links to the real wearetribus.com still open in a browser.
+
 Notes
   - The pages carry "noindex" so search engines won't list the copy.
   - Nothing on these pages collects or sends any data.
