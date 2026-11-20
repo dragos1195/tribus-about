@@ -165,17 +165,22 @@
   .end-buttons { margin-top: 26px; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
   .again { font-size: 17px; font-size: 17px; padding: 12px 24px; background: var(--purple); color: var(--cream); box-shadow: 0 5px 0 var(--purple-dark); }
 
-  .baby-btn { font-size: 17px; padding: 12px 22px; background: var(--yellow); color: var(--ink); box-shadow: 0 5px 0 #b8901f; }
+  .baby-btn { font-size: 26px; line-height: 1; width: 56px; height: 52px; padding: 0; background: var(--yellow); color: var(--ink); box-shadow: 0 5px 0 #b8901f; }
 
   /* ---------- scene 4: the baby page (the whole screen turns into sunshine) ---------- */
   .sun { position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background: radial-gradient(circle at 50% 12%, #fffbe0 0%, #ffe680 30%, #ffd23f 65%, #ffbf1f 100%);
-    clip-path: circle(0 at var(--sx, 50%) var(--sy, 80%)); transition: clip-path .9s cubic-bezier(.6,0,.2,1); }
+    clip-path: circle(0 at var(--sx, 50%) var(--sy, 80%)); transition: clip-path .8s cubic-bezier(.55,0,.25,1); }
   body.sunny .sun { clip-path: circle(150% at var(--sx, 50%) var(--sy, 80%)); }
   body.sunny { color: var(--ink); }
   body.sunny .back { color: #2b2140b3; border-color: #2b214033; }
   body.sunny .stars, body.sunny #sky { opacity: 0; }
   #baby-scene { padding-top: 6px; color: var(--ink); }
+  /* screen changes: the old screen fades out first, the new one fades in */
+  .scene { transition: opacity .3s ease, transform .3s ease; }
+  .scene.leaving { opacity: 0; transform: scale(.97); pointer-events: none; }
+  .scene.entering { animation: sceneIn .6s cubic-bezier(.16,1,.3,1) both; }
+  @keyframes sceneIn { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: none } }
   .sunburst { font-size: 64px; line-height: 1; animation: spin 18s linear infinite; filter: drop-shadow(0 0 24px #fff8); }
   @keyframes spin { to { transform: rotate(360deg) } }
   .baby-ep { margin-top: 10px; color: #c2410c; }
@@ -188,11 +193,8 @@
   .baby-lead { font-size: 22px; font-weight: 800; line-height: 1.3; text-wrap: balance; }
   .baby-lead b { color: #c2410c; }
   .baby-welcome { font-size: 30px; font-weight: 900; color: #c2410c; line-height: 1.15; margin-top: 4px; }
-  .promises { list-style: none; margin-top: 6px; text-align: left; display: grid; gap: 10px; background: #fff9; border-radius: 16px; padding: 16px; box-shadow: 0 10px 30px #b4530026; font-size: 16px; line-height: 1.4; }
-  .promises li { display: flex; gap: 10px; align-items: flex-start; }
-  .promises span { font-size: 20px; line-height: 1.2; }
   .baby-sign { font-family: "Caveat", cursive; font-size: 30px; color: #3a2f6b; }
-  .baby-gif-btn { font-size: 17px; padding: 12px 22px; background: #ff6fb5; color: #fff; box-shadow: 0 5px 0 #c2407f; }
+  .baby-gif-btn { font-size: 26px; line-height: 1; width: 56px; height: 52px; padding: 0; background: #ff6fb5; color: #fff; box-shadow: 0 5px 0 #c2407f; }
   .baby-back { font-size: 16px; padding: 12px 20px; background: transparent; color: var(--ink); border: 2px solid #2b214040; }
 
   .joey { margin: 22px auto 0; width: min(80vw, 320px); border-radius: 16px; overflow: hidden; background: #0003; box-shadow: 0 14px 34px #0007; border: 4px solid var(--yellow); transform: rotate(-1.5deg); }
@@ -203,6 +205,17 @@
   .joey-float.show { display: block; animation: floatIn .5s cubic-bezier(.2,1.6,.4,1) both; }
   .joey.loading { visibility: hidden; }
   @keyframes floatIn { from { transform: translate(-50%,-50%) scale(.4); opacity: 0 } to { transform: translate(-50%,-50%) rotate(-2deg); opacity: 1 } }
+  /* theme song: a tiny YouTube player. If the phone refuses to start it from the
+     door tap, the little player shows in the corner so one tap on it starts it. */
+  .music { position: fixed; left: 12px; bottom: max(14px, env(safe-area-inset-bottom)); z-index: 45; display: none; align-items: center; gap: 8px; }
+  .music.on { display: flex; }
+  .music-btn { width: 44px; height: 44px; border-radius: 50%; border: 0; font-size: 20px; background: #000a; color: #fff; box-shadow: 0 4px 12px #0005; cursor: pointer; }
+  .yt-box { width: 112px; height: 63px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 14px #0007; border: 2px solid var(--yellow); background: #000; position: relative; }
+  .yt-box iframe { width: 100%; height: 100%; display: block; border: 0; }
+  .music.playing .yt-box { position: fixed; left: 0; bottom: 0; width: 2px; height: 2px; opacity: .01; border: 0; pointer-events: none; }
+  .music:not(.playing) .music-btn { display: none; }
+  .yt-tip { font-size: 13px; font-weight: 700; background: #000c; color: #fff; padding: 6px 10px; border-radius: 999px; }
+  .music.playing .yt-tip { display: none; }
   .caption { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 40; background: #000c; color: #fff; font-size: 15px; padding: 6px 14px; border-radius: 6px; font-style: italic; opacity: 0; transition: opacity .3s; pointer-events: none; width: max-content; max-width: calc(100vw - 32px); text-align: center; line-height: 1.35; text-wrap: balance; overflow-wrap: anywhere; bottom: max(22px, env(safe-area-inset-bottom)); }
   .caption.show { opacity: 1; }
 
@@ -350,7 +363,7 @@
     <div class="end-buttons">
       <button class="btn again" id="again">🎆 Mai multe artificii!</button>
       <!-- EDIT ME: label of the button that opens the baby page -->
-      <button class="btn baby-btn" id="baby">🍼 Pentru bebe</button>
+      <button class="btn baby-btn" id="baby" aria-label="Pentru bebe">🍼</button>
     </div>
   </section>
 
@@ -371,7 +384,7 @@
             <div class="ph"><b>🧸</b>Poza de când eram mici</div>
           </div>
           <!-- EDIT ME: caption on the front -->
-          <figcaption>și noi am fost mici 🎄</figcaption>
+          <figcaption>o așteptăm cu drag 💛</figcaption>
           <span class="turn-hint">Întoarce-mă! 🔄</span>
         </figure>
         <!-- BACK. EDIT ME: surprise/photo-kids-2.jpg -->
@@ -381,37 +394,34 @@
             <div class="ph"><b>🧸</b>A doua poză</div>
           </div>
           <!-- EDIT ME: caption on the back -->
-          <figcaption>…și la fel de serioși 😄</figcaption>
+          <figcaption>…și o iubim deja 🎀</figcaption>
         </figure>
       </div>
     </div>
 
     <!-- EDIT ME: the message -->
     <div class="baby-note">
-      <p class="baby-lead">Mai presus de orice nășie, contract sau voucher, cel mai frumos lucru e altul: <b>în curând deveniți părinți.</b> 💛</p>
-      <p>Vă așteaptă cea mai frumoasă aventură dintre toate: o familie a voastră și o fetiță care o să vă fure inima din prima secundă.</p>
-      <p>Și noi abia așteptăm s-o primim în viața noastră, s-o răsfățăm, s-o vedem crescând și să fim alături de voi la fiecare pas.</p>
+      <p class="baby-lead">Mai presus de orice: <b>în curând deveniți părinți.</b> 💛</p>
       <p class="baby-welcome">Bun venit, prințesă mică! 🎀</p>
-
-      <ul class="promises">
-        <li><span>🧸</span>Răsfăț nelimitat, fără drept de veto din partea părinților</li>
-        <li><span>🍼</span>Babysitting la cerere, ca să mai aveți și voi o seară doar în doi</li>
-        <li><span>📺</span>O învățăm toate replicile din Friends până la 5 ani</li>
-        <li><span>🎂</span>Nu ratăm nicio zi de naștere. Niciuna.</li>
-      </ul>
       <p class="baby-sign">Cu tot dragul, noi doi 💛</p>
     </div>
 
     <div class="end-buttons">
-      <!-- EDIT ME: label of the Friends baby GIF button -->
-      <button class="btn baby-gif-btn" id="baby-gif">👶 Friends cu bebeluși</button>
-      <button class="btn baby-back" id="baby-back">↩ Înapoi la contract</button>
+      <!-- EDIT ME: label of the button that shows the baby GIFs -->
+      <button class="btn baby-gif-btn" id="baby-gif" aria-label="Surpriză">🧸</button>
+      <button class="btn baby-back" id="baby-back">↩ Înapoi</button>
     </div>
   </section>
 </div>
 
 <canvas id="confetti"></canvas>
 <div class="caption" id="caption"></div>
+<!-- Friends theme song, played from YouTube (needs internet). EDIT ME: THEME_VIDEOS in the script. -->
+<div class="music" id="music">
+  <div class="yt-box"><div id="yt"></div></div>
+  <span class="yt-tip">🎵 Atinge pentru muzică</span>
+  <button class="music-btn" id="music-btn" aria-label="Oprește muzica">🔊</button>
+</div>
 <div class="joey joey-float" id="joey-float"><img id="joey-float-img" alt="Joey se bucură"><small>via GIPHY</small></div>
 
 <script>
@@ -494,8 +504,46 @@
 
   /* ---------------- scene 1 → 2: open the door ---------------- */
   var opened = false;
+  /* ---------------- the theme song (YouTube) ---------------- */
+  // EDIT ME: YouTube ids of "I'll Be There for You" (the first one that allows embedding is used)
+  var THEME_VIDEOS = ['CXnEgbDcITo', 'q-9kPks0IfE', 'S8PNXgLhkT0'];
+  var yt = null, ytReady = false, ytTry = 0, wantMusic = false, muted = false;
+  window.onYouTubeIframeAPIReady = function () {
+    yt = new YT.Player('yt', {
+      videoId: THEME_VIDEOS[0],
+      playerVars: { playsinline: 1, controls: 0, disablekb: 1, rel: 0, modestbranding: 1, loop: 1, playlist: THEME_VIDEOS[0] },
+      events: {
+        onReady: function () { ytReady = true; yt.setVolume(70); if (wantMusic) startMusic(); },
+        onStateChange: function (e) {
+          if (e.data === 1) $('music').classList.add('playing');           // playing
+          if (e.data === 0) { yt.seekTo(0); yt.playVideo(); }              // ended: loop
+        },
+        onError: function () {                                           // not embeddable: try the next one
+          if (++ytTry < THEME_VIDEOS.length) yt.loadVideoById(THEME_VIDEOS[ytTry]);
+          else $('music').style.display = 'none';                         // none worked: hide quietly
+        }
+      }
+    });
+  };
+  (function () { var t = document.createElement('script'); t.src = 'https://www.youtube.com/iframe_api'; t.async = true; t.onerror = function () { $('music').style.display = 'none'; }; document.head.appendChild(t); })();
+  setTimeout(function () { if (!ytReady) $('music').style.display = 'none'; }, 15000);   // YouTube unreachable
+  function startMusic() {
+    wantMusic = true;
+    $('music').classList.add('on');
+    if (!ytReady) return;
+    try { yt.unMute(); yt.playVideo(); } catch (e) {}
+  }
+  $('music-btn').addEventListener('click', function () {
+    if (!yt || !ytReady) return;
+    muted = !muted;
+    if (muted) yt.pauseVideo(); else yt.playVideo();
+    this.textContent = muted ? '🔇' : '🔊';
+    this.setAttribute('aria-label', muted ? 'Pornește muzica' : 'Oprește muzica');
+  });
+
   function openDoor() {
     if (opened) return; opened = true;
+    startMusic();
     $('doorway').classList.add('open');
     caption('🎵 *muzică de început de episod* 🎵', 2200);
     setTimeout(function () {
@@ -677,28 +725,38 @@
     confetti(160, cx, H * 0.55); confetti(120);
   }
   function sayYes() {
-    showScene('yes-scene');
+    goScene('yes-scene', 250);
     caption('👏 *aplauze furtunoase* 👏', 2600);
     joey(JOEY.yes);
-    fitContract();
+    setTimeout(fitContract, 300);
     finale();
     setTimeout(function () { confetti(100); }, 1400);
   }
   yesBtn.addEventListener('click', sayYes);
 
   /* ---------------- moving between screens ---------------- */
+  var SCENES = ['door-scene', 'ask-scene', 'yes-scene', 'baby-scene'];
   function showScene(id) {
-    ['door-scene', 'ask-scene', 'yes-scene', 'baby-scene'].forEach(function (s) { $(s).classList.toggle('on', s === id); });
+    SCENES.forEach(function (s) { $(s).classList.remove('leaving', 'entering'); $(s).classList.toggle('on', s === id); });
+    if (!reduce) { void $(id).offsetWidth; $(id).classList.add('entering'); }
     var sunny = id === 'baby-scene';
     document.body.classList.toggle('sunny', sunny);
     document.querySelector('meta[name="theme-color"]').setAttribute('content', sunny ? '#ffd23f' : '#2a1f4d');
     fwOn = !sunny;
     scrollTo(0, 0);
   }
+  // fade the current screen out, then show the next one
+  function goScene(id, delay, before) {
+    var cur = SCENES.filter(function (s) { return $(s).classList.contains('on'); })[0];
+    if (cur) { $(cur).classList.remove('entering'); void $(cur).offsetWidth; $(cur).classList.add('leaving'); }
+    $('joey-float').classList.remove('show');
+    if (before) before();
+    setTimeout(function () { showScene(id); }, reduce ? 0 : (delay || 300));
+  }
   // "← Înapoi" at the top: contract → question, baby page → contract, otherwise back to the team page
   document.querySelector('.back').addEventListener('click', function (e) {
-    if ($('yes-scene').classList.contains('on')) { e.preventDefault(); showScene('ask-scene'); }
-    else if ($('baby-scene').classList.contains('on')) { e.preventDefault(); showScene('yes-scene'); }
+    if ($('yes-scene').classList.contains('on')) { e.preventDefault(); goScene('ask-scene'); }
+    else if ($('baby-scene').classList.contains('on')) { e.preventDefault(); leaveBaby(); }
   });
 
   /* ---------------- the baby page ---------------- */
@@ -713,15 +771,12 @@
     var sun = $('sun');
     sun.style.setProperty('--sx', (r.left + r.width / 2) + 'px');
     sun.style.setProperty('--sy', (r.top + r.height / 2) + 'px');
-    document.body.classList.add('sunny');
     BABY_GIFS.slice(0, 2).forEach(function (id) { loadGif(id); });
-    setTimeout(function () {
-      showScene('baby-scene');
-      caption('*publicul: awwwww* 🥹', 2600);
-      babyConfetti(140);
-    }, reduce ? 0 : 650);
+    goScene('baby-scene', 520, function () { document.body.classList.add('sunny'); });
+    setTimeout(function () { caption('*publicul: awwwww* 🥹', 2600); babyConfetti(140); }, reduce ? 0 : 600);
   });
-  $('baby-back').addEventListener('click', function () { showScene('yes-scene'); });
+  function leaveBaby() { goScene('yes-scene', 300); }
+  $('baby-back').addEventListener('click', leaveBaby);
   function babyFlip() {
     var el = $('baby-flip'), toBack = !el.classList.contains('flipped');
     if (turnCard(el, toBack, 3) && toBack) caption('*publicul: awww, ce mici erau* 🥹');
