@@ -7,7 +7,8 @@ Edit the surprise
     captions, the question, what the runaway "Nu" button says, the funny
     contract, the captions for the fireworks button and the Joey GIFs.
   - Photos: surprise/photo-front.jpg (serious, front) and
-    surprise/photo-kids.jpg (funny, back; the older cow-hat photo is still in surprise/photo-back.jpg). Replace the files to change them.
+    surprise/photo-back.jpg (funny, back). The baby page uses
+    surprise/photo-kids.jpg (front) and surprise/photo-kids-2.jpg (back). Replace the files to change them.
     Portrait 4:5 looks best.
   - Joey GIFs come from GIPHY, so they need an internet connection. To swap one,
     open a GIF on giphy.com and copy the id (the last part of its link) into the
@@ -19,6 +20,8 @@ Your profile page (dragos.html)
     label, years, one line) and the "also comfortable with" chips.
 
 What triggers what
+  - On the last screen, "Pentru bebe" opens the sunny baby page. Its text, the
+    promises list and the Friends baby GIFs (BABY_GIFS) are marked EDIT ME.
   - On index.html, tapping Lucia's card opens surprise.html.
   - Tapping Dragoș's card opens dragos.html, the serious profile page. Everything else on index.html looks and behaves like the real
     About page; the menu and other links go to the real wearetribus.com.

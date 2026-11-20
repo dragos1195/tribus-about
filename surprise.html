@@ -35,6 +35,7 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { background: var(--night-2); overflow-x: hidden; }
+  /* body must NOT get its own overflow, or phones show a second, inner scroll area */
   html, body { min-height: 100%; }
   body {
     font-family: "Nunito", ui-rounded, system-ui, sans-serif;
@@ -43,7 +44,6 @@
       radial-gradient(1200px 600px at 50% -10%, #4b3a8a 0%, transparent 60%),
       linear-gradient(180deg, var(--night) 0%, var(--night-2) 100%);
     background-attachment: fixed;
-    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;
   }
@@ -162,7 +162,38 @@
   .contract .sign span { font-family: "Caveat", cursive; font-size: 24px; color: #3a2f6b; border-bottom: 1.5px solid #3a2f6b55; padding: 0 6px; }
   .stamp { position: absolute; right: -8px; top: -18px; border: 4px solid var(--red); color: var(--red); font-weight: 900; font-size: 20px; padding: 4px 12px; border-radius: 8px; transform: rotate(-14deg); opacity: .85; animation: stamp .45s 1s both cubic-bezier(.2,1.6,.4,1); }
   @keyframes stamp { from { transform: rotate(-14deg) scale(3); opacity: 0 } to { transform: rotate(-14deg) scale(1); opacity: .85 } }
-  .again { margin-top: 26px; font-size: 17px; padding: 12px 24px; background: var(--purple); color: var(--cream); box-shadow: 0 5px 0 var(--purple-dark); }
+  .end-buttons { margin-top: 26px; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+  .again { font-size: 17px; font-size: 17px; padding: 12px 24px; background: var(--purple); color: var(--cream); box-shadow: 0 5px 0 var(--purple-dark); }
+
+  .baby-btn { font-size: 17px; padding: 12px 22px; background: var(--yellow); color: var(--ink); box-shadow: 0 5px 0 #b8901f; }
+
+  /* ---------- scene 4: the baby page (the whole screen turns into sunshine) ---------- */
+  .sun { position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(circle at 50% 12%, #fffbe0 0%, #ffe680 30%, #ffd23f 65%, #ffbf1f 100%);
+    clip-path: circle(0 at var(--sx, 50%) var(--sy, 80%)); transition: clip-path .9s cubic-bezier(.6,0,.2,1); }
+  body.sunny .sun { clip-path: circle(150% at var(--sx, 50%) var(--sy, 80%)); }
+  body.sunny { color: var(--ink); }
+  body.sunny .back { color: #2b2140b3; border-color: #2b214033; }
+  body.sunny .stars, body.sunny #sky { opacity: 0; }
+  #baby-scene { padding-top: 6px; color: var(--ink); }
+  .sunburst { font-size: 64px; line-height: 1; animation: spin 18s linear infinite; filter: drop-shadow(0 0 24px #fff8); }
+  @keyframes spin { to { transform: rotate(360deg) } }
+  .baby-ep { margin-top: 10px; color: #c2410c; }
+  .baby-ep-title { color: #2b2140b3; }
+  .baby-title { margin-top: 14px; color: var(--ink); text-shadow: 0 4px 0 #fff8; }
+  #baby-scene .flip { margin-top: 30px; }
+  #baby-scene .polaroid { box-shadow: 0 18px 40px #b4530044; }
+  #baby-scene .polaroid::before { background: #ffffffaa; }
+  .baby-note { margin-top: 34px; text-align: center; font-size: 18px; line-height: 1.5; display: grid; gap: 14px; }
+  .baby-lead { font-size: 22px; font-weight: 800; line-height: 1.3; text-wrap: balance; }
+  .baby-lead b { color: #c2410c; }
+  .baby-welcome { font-size: 30px; font-weight: 900; color: #c2410c; line-height: 1.15; margin-top: 4px; }
+  .promises { list-style: none; margin-top: 6px; text-align: left; display: grid; gap: 10px; background: #fff9; border-radius: 16px; padding: 16px; box-shadow: 0 10px 30px #b4530026; font-size: 16px; line-height: 1.4; }
+  .promises li { display: flex; gap: 10px; align-items: flex-start; }
+  .promises span { font-size: 20px; line-height: 1.2; }
+  .baby-sign { font-family: "Caveat", cursive; font-size: 30px; color: #3a2f6b; }
+  .baby-gif-btn { font-size: 17px; padding: 12px 22px; background: #ff6fb5; color: #fff; box-shadow: 0 5px 0 #c2407f; }
+  .baby-back { font-size: 16px; padding: 12px 20px; background: transparent; color: var(--ink); border: 2px solid #2b214040; }
 
   .joey { margin: 22px auto 0; width: min(80vw, 320px); border-radius: 16px; overflow: hidden; background: #0003; box-shadow: 0 14px 34px #0007; border: 4px solid var(--yellow); transform: rotate(-1.5deg); }
   .joey img { display: block; width: 100%; height: auto; min-height: 120px; object-fit: cover; }
@@ -184,6 +215,7 @@
 <body>
 <canvas id="sky"></canvas>
 <div class="stars"></div>
+<div class="sun" id="sun"></div>
 
 <div class="wrap">
   <a class="back" href="index.html">← Înapoi</a>
@@ -225,16 +257,15 @@
           <figcaption>noi, foarte serioși 🧐</figcaption>
           <span class="turn-hint">Întoarce-mă! 🔄</span>
         </figure>
-        <!-- BACK: the funny photo. EDIT ME: surprise/photo-kids.jpg
-             (the cow-hat photo is still in surprise/photo-back.jpg if you want it back) -->
+        <!-- BACK: the funny photo. EDIT ME: surprise/photo-back.jpg -->
         <figure class="polaroid back-side">
           <div class="pic">
-            <img src="surprise/photo-kids.jpg" alt="Noi, de mici"
+            <img src="surprise/photo-back.jpg" alt="Noi, de fapt"
                  onerror="this.remove();">
             <div class="ph"><b>🤪</b>Poza amuzantă</div>
           </div>
           <!-- EDIT ME: caption on the back -->
-          <figcaption>…și noi, de mici 🎄</figcaption>
+          <figcaption>…și noi, de fapt 😘</figcaption>
         </figure>
       </div>
     </div>
@@ -316,7 +347,66 @@
       </div>
     </div>
 
-    <button class="btn again" id="again">🎆 Mai multe artificii!</button>
+    <div class="end-buttons">
+      <button class="btn again" id="again">🎆 Mai multe artificii!</button>
+      <!-- EDIT ME: label of the button that opens the baby page -->
+      <button class="btn baby-btn" id="baby">🍼 Pentru bebe</button>
+    </div>
+  </section>
+
+  <!-- ===================== SCENE 4: the baby page ===================== -->
+  <section class="scene" id="baby-scene">
+    <div class="sunburst" aria-hidden="true">☀️</div>
+    <!-- EDIT ME -->
+    <p class="episode baby-ep">Season 1 · Episode 2</p>
+    <p class="ep-title baby-ep-title">The One With the Baby on the Way</p>
+    <div class="big-dotted dotted baby-title" aria-label="Bebe">B<i class="dot r"></i>E<i class="dot b"></i>B<i class="dot r"></i>E</div>
+
+    <div class="flip" id="baby-flip" role="button" tabindex="0" aria-label="Întoarce poza">
+      <div class="flip-inner">
+        <!-- FRONT. EDIT ME: surprise/photo-kids.jpg -->
+        <figure class="polaroid front-side">
+          <div class="pic">
+            <img src="surprise/photo-kids.jpg" alt="Noi, de mici" onerror="this.remove();">
+            <div class="ph"><b>🧸</b>Poza de când eram mici</div>
+          </div>
+          <!-- EDIT ME: caption on the front -->
+          <figcaption>și noi am fost mici 🎄</figcaption>
+          <span class="turn-hint">Întoarce-mă! 🔄</span>
+        </figure>
+        <!-- BACK. EDIT ME: surprise/photo-kids-2.jpg -->
+        <figure class="polaroid back-side">
+          <div class="pic">
+            <img src="surprise/photo-kids-2.jpg" alt="Noi, de mici, din nou" onerror="this.remove();">
+            <div class="ph"><b>🧸</b>A doua poză</div>
+          </div>
+          <!-- EDIT ME: caption on the back -->
+          <figcaption>…și la fel de serioși 😄</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- EDIT ME: the message -->
+    <div class="baby-note">
+      <p class="baby-lead">Mai presus de orice nășie, contract sau voucher, cel mai frumos lucru e altul: <b>în curând deveniți părinți.</b> 💛</p>
+      <p>Vă așteaptă cea mai frumoasă aventură dintre toate: o familie a voastră și o fetiță care o să vă fure inima din prima secundă.</p>
+      <p>Și noi abia așteptăm s-o primim în viața noastră, s-o răsfățăm, s-o vedem crescând și să fim alături de voi la fiecare pas.</p>
+      <p class="baby-welcome">Bun venit, prințesă mică! 🎀</p>
+
+      <ul class="promises">
+        <li><span>🧸</span>Răsfăț nelimitat, fără drept de veto din partea părinților</li>
+        <li><span>🍼</span>Babysitting la cerere, ca să mai aveți și voi o seară doar în doi</li>
+        <li><span>📺</span>O învățăm toate replicile din Friends până la 5 ani</li>
+        <li><span>🎂</span>Nu ratăm nicio zi de naștere. Niciuna.</li>
+      </ul>
+      <p class="baby-sign">Cu tot dragul, noi doi 💛</p>
+    </div>
+
+    <div class="end-buttons">
+      <!-- EDIT ME: label of the Friends baby GIF button -->
+      <button class="btn baby-gif-btn" id="baby-gif">👶 Friends cu bebeluși</button>
+      <button class="btn baby-back" id="baby-back">↩ Înapoi la contract</button>
+    </div>
   </section>
 </div>
 
@@ -587,9 +677,7 @@
     confetti(160, cx, H * 0.55); confetti(120);
   }
   function sayYes() {
-    $('ask-scene').classList.remove('on');
-    $('yes-scene').classList.add('on');
-    scrollTo({ top: 0 });
+    showScene('yes-scene');
     caption('👏 *aplauze furtunoase* 👏', 2600);
     joey(JOEY.yes);
     fitContract();
@@ -597,6 +685,56 @@
     setTimeout(function () { confetti(100); }, 1400);
   }
   yesBtn.addEventListener('click', sayYes);
+
+  /* ---------------- moving between screens ---------------- */
+  function showScene(id) {
+    ['door-scene', 'ask-scene', 'yes-scene', 'baby-scene'].forEach(function (s) { $(s).classList.toggle('on', s === id); });
+    var sunny = id === 'baby-scene';
+    document.body.classList.toggle('sunny', sunny);
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', sunny ? '#ffd23f' : '#2a1f4d');
+    fwOn = !sunny;
+    scrollTo(0, 0);
+  }
+  // "← Înapoi" at the top: contract → question, baby page → contract, otherwise back to the team page
+  document.querySelector('.back').addEventListener('click', function (e) {
+    if ($('yes-scene').classList.contains('on')) { e.preventDefault(); showScene('ask-scene'); }
+    else if ($('baby-scene').classList.contains('on')) { e.preventDefault(); showScene('yes-scene'); }
+  });
+
+  /* ---------------- the baby page ---------------- */
+  // EDIT ME: GIPHY ids of Friends baby GIFs (no Phoebe)
+  var BABY_GIFS = ['Q61Pax4qUsJ7slU8kM', 'XB49R5EbgD9XDf1mh2', 'mCK7BflhDNp5pNkdFI', 'd8QDr4XprvYACbjLyY', 'IeuVOcscFiWuTiSItj', 'ieJhqWk0LcNqbE2dTj'];
+  // EDIT ME: captions for the baby GIF button
+  var BABY_LINES = ['*publicul: awwwww* 🥹', '*toată lumea vorbește în șoaptă ca să nu trezească bebele* 🤫', '*cineva a adus deja botoșei* 🧦', '*Joey se oferă babysitter. Refuzăm politicos.* 😅', '*lacrimi de fericire în rândul 1* 🥲', '*s-a confirmat: cel mai frumos spin-off* 🎀'];
+  var PASTEL = ['#ff6fb5', '#ffb3d9', '#ffffff', '#ff9ec7', '#ffd6e8', '#f7c948'];
+  function babyConfetti(n) { var keep = COLORS; COLORS = PASTEL; confetti(n); COLORS = keep; }
+  $('baby').addEventListener('click', function (e) {
+    var r = e.currentTarget.getBoundingClientRect();
+    var sun = $('sun');
+    sun.style.setProperty('--sx', (r.left + r.width / 2) + 'px');
+    sun.style.setProperty('--sy', (r.top + r.height / 2) + 'px');
+    document.body.classList.add('sunny');
+    BABY_GIFS.slice(0, 2).forEach(function (id) { loadGif(id); });
+    setTimeout(function () {
+      showScene('baby-scene');
+      caption('*publicul: awwwww* 🥹', 2600);
+      babyConfetti(140);
+    }, reduce ? 0 : 650);
+  });
+  $('baby-back').addEventListener('click', function () { showScene('yes-scene'); });
+  function babyFlip() {
+    var el = $('baby-flip'), toBack = !el.classList.contains('flipped');
+    if (turnCard(el, toBack, 3) && toBack) caption('*publicul: awww, ce mici erau* 🥹');
+  }
+  $('baby-flip').addEventListener('click', babyFlip);
+  $('baby-flip').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); babyFlip(); } });
+  var babyN = 0;
+  $('baby-gif').addEventListener('click', function () {
+    caption(BABY_LINES[babyN % BABY_LINES.length], 2600);
+    floatJoey(BABY_GIFS[babyN % BABY_GIFS.length], BABY_GIFS[(babyN + 1) % BABY_GIFS.length]);
+    babyConfetti(60);
+    babyN++;
+  });
   // EDIT ME: what appears each time they tap the fireworks button
   var MORE = [
     '*publicul înnebunește* 🎆',
