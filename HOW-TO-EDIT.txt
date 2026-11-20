@@ -22,7 +22,7 @@ Your profile page (dragos.html)
 What triggers what
   - On the last screen, the 🍼 button opens the sunny baby page. Its text and
     the baby GIFs behind the 🧸 button (BABY_GIFS) are marked EDIT ME.
-  - The Friends theme (surprise/theme.mp3) starts with the door tap and loops.
+  - The Friends theme (surprise/theme.mp3) starts once the door opens, and loops.
     The 🔊 button bottom-left pauses it. Replace the file to change the song.
   - On index.html, tapping Lucia's card opens surprise.html.
   - Tapping Dragoș's card opens dragos.html, the serious profile page. Everything else on index.html looks and behaves like the real

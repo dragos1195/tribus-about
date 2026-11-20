@@ -482,9 +482,21 @@
   /* ---------------- the theme song ---------------- */
   var theme = $('theme'), muted = false;
   theme.volume = 0.7;
-  function startMusic() {
+  // iPhones only allow sound that is started inside a tap. So the door tap
+  // "unlocks" the song (starts it silently and stops it right away), and the
+  // song really starts once the door is open and the question screen shows.
+  var unlocked = false;
+  function unlockMusic() {
+    theme.muted = true;
     var p = theme.play();
+    var done = function () { theme.pause(); theme.currentTime = 0; theme.muted = false; unlocked = true; };
+    if (p && p.then) p.then(done, function () { theme.muted = false; }); else done();
+  }
+  function startMusic() {
     $('music-btn').classList.add('on');
+    if (muted) return;
+    theme.muted = false; theme.currentTime = 0;
+    var p = theme.play();
     if (p && p.catch) p.catch(function () { muted = true; $('music-btn').textContent = '🔇'; });
   }
   $('music-btn').addEventListener('click', function () {
@@ -496,13 +508,14 @@
 
   function openDoor() {
     if (opened) return; opened = true;
-    startMusic();
+    unlockMusic();
     $('doorway').classList.add('open');
     caption('🎵 *muzică de început de episod* 🎵', 2200);
     setTimeout(function () {
       $('door-scene').classList.remove('on');
       $('ask-scene').classList.add('on');
       scrollTo(0, 0);
+      startMusic();
       fwOn = true; confetti(90);
       preloadGifs();
       for (var i = 0; i < 4; i++) setTimeout(launch, i * 250);
