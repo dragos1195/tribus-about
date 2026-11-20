@@ -1,0 +1,33 @@
+GODPARENT SURPRISE - how to edit and deploy
+==========================================
+
+Edit the surprise
+  - Open surprise.html in any text editor. Everything you may want to change is
+    marked with an "EDIT ME" comment: the door, the episode title, the photo
+    captions, the question, what the runaway "Nu" button says, the funny
+    contract, the captions for the fireworks button and the Joey GIFs.
+  - Photos: surprise/photo-front.jpg (serious, front) and
+    surprise/photo-back.jpg (funny, back). Replace the files to change them.
+    Portrait 4:5 looks best.
+  - Joey GIFs come from GIPHY, so they need an internet connection. To swap one,
+    open a GIF on giphy.com and copy the id (the last part of its link) into the
+    JOEY list in surprise.html. If a GIF can't load, its box simply hides.
+
+Your profile page (dragos.html)
+  - Everything on it comes from the PROFILE block near the bottom of
+    dragos.html: bio, the three stat tiles, the technologies (name, level 0-100,
+    label, years, one line) and the "also comfortable with" chips.
+
+What triggers what
+  - On index.html, tapping Lucia's card opens surprise.html.
+  - Tapping Dragoș's card opens dragos.html, the serious profile page. Everything else on index.html looks and behaves like the real
+    About page; the menu and other links go to the real wearetribus.com.
+
+Deploy (any static host works, pick one)
+  - Netlify Drop: go to app.netlify.com/drop and drag this whole folder in.
+  - Vercel / Cloudflare Pages / GitHub Pages: upload this folder as-is,
+    no build step. index.html is the entry page.
+
+Notes
+  - The pages carry "noindex" so search engines won't list the copy.
+  - Nothing on these pages collects or sends any data.

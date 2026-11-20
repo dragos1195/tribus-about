@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="theme-color" content="#2a1f4d">
+<title>Toc, toc! 🚪</title>
+<link rel="icon" href="icon.png" type="image/png">
+<link rel="stylesheet" href="assets/css/fun.css">
+<style>
+  /* =================================================================
+     Surprise page. Every bit of text you may want to change is in the
+     HTML below, marked with an "EDIT ME" comment.
+     Your photo: save it as surprise/photo.jpg
+     ================================================================= */
+  :root {
+    --night: #2a1f4d;
+    --night-2: #1a1333;
+    --purple: #6b3fa0;
+    --purple-dark: #4e2a7a;
+    --yellow: #f7c948;
+    --red: #e4572e;
+    --blue: #3a86ff;
+    --orange: #e07a2f;
+    --cream: #fff6e5;
+    --ink: #2b2140;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--night-2); overflow-x: hidden; }
+  html, body { min-height: 100%; }
+  body {
+    font-family: "Nunito", ui-rounded, system-ui, sans-serif;
+    color: var(--cream);
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #4b3a8a 0%, transparent 60%),
+      linear-gradient(180deg, var(--night) 0%, var(--night-2) 100%);
+    background-attachment: fixed;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #sky { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 30; }
+  .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 12% 18%, #fff9 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 78% 9%, #fff8 50%, transparent 51%),
+      radial-gradient(1px 1px at 40% 30%, #fff7 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 88% 40%, #fff6 50%, transparent 51%),
+      radial-gradient(1px 1px at 22% 55%, #fff6 50%, transparent 51%),
+      radial-gradient(1px 1px at 60% 70%, #fff5 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 6% 82%, #fff6 50%, transparent 51%),
+      radial-gradient(1px 1px at 93% 88%, #fff6 50%, transparent 51%);
+    animation: twinkle 4s ease-in-out infinite alternate; }
+  @keyframes twinkle { from { opacity: .5 } to { opacity: 1 } }
+
+  .wrap { position: relative; z-index: 1; overflow-x: clip; max-width: 520px; margin: 0 auto; padding: 20px 20px 60px; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+  .back { align-self: flex-start; color: #fff6e5b3; text-decoration: none; font-size: 15px; padding: 6px 12px; border-radius: 999px; border: 1px solid #fff6e533; }
+  .back:hover { color: var(--cream); border-color: #fff6e580; }
+
+  /* ---------- the dotted title ---------- */
+  .dotted { font-weight: 900; letter-spacing: .02em; line-height: 1; white-space: nowrap; }
+  .dotted .dot { display: inline-block; width: .16em; height: .16em; border-radius: 50%; margin: 0 .14em; vertical-align: middle; transform: translateY(-.05em); }
+  .dot.r { background: var(--red); } .dot.y { background: var(--yellow); } .dot.b { background: var(--blue); }
+
+  /* ---------- scene 1: the purple door ---------- */
+  .scene { display: none; flex: 1; flex-direction: column; align-items: center; text-align: center; }
+  .scene.on { display: flex; }
+  #door-scene { justify-content: center; gap: 24px; padding-top: 4px; }
+  .knock { font-size: clamp(30px, 9vw, 44px); font-weight: 900; color: var(--yellow); text-shadow: 0 3px 0 #0004; }
+  .knock-sub { font-size: 18px; color: #fff6e5cc; margin-top: -14px; }
+  .doorway { perspective: 900px; width: min(52vw, 210px); aspect-ratio: 1 / 1.8; position: relative; cursor: pointer; }
+  .frame { position: absolute; inset: -16px -16px 0 -16px; border: 16px solid var(--yellow); border-bottom: 0; border-radius: 6px 6px 0 0;
+    background: radial-gradient(circle at 50% 40%, #fff3c4 0%, #ffd56a 35%, #f39c3d 100%); box-shadow: 0 20px 50px #0007; }
+  .frame::after { content: "🎉"; position: absolute; left: 50%; top: 40%; transform: translate(-50%,-50%); font-size: 64px; }
+  .door { position: absolute; inset: 0; background: var(--purple); border-radius: 4px 4px 0 0; transform-origin: left center; transition: transform .7s cubic-bezier(.3,1.3,.5,1); box-shadow: inset 0 0 0 6px var(--purple-dark), 4px 0 20px #0005; animation: knock 2.4s ease-in-out infinite; }
+  .door .panel { position: absolute; left: 14%; right: 14%; border: 5px solid var(--purple-dark); border-radius: 6px; }
+  .door .p1 { top: 9%; height: 34%; } .door .p2 { top: 52%; height: 38%; }
+  .door .peephole { position: absolute; left: 50%; top: 46%; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: #c9b46b; box-shadow: inset 0 0 0 3px #8a7a3c; }
+  .door .knob { position: absolute; right: 9%; top: 52%; width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff2b0, #c9a227 60%, #8a6d12); box-shadow: 0 2px 4px #0006; }
+  .door .sign { position: absolute; left: 50%; top: 22%; transform: translateX(-50%) rotate(-4deg); background: var(--cream); color: var(--ink); font-family: "Caveat", cursive; font-size: 22px; padding: 4px 10px; border-radius: 4px; box-shadow: 0 2px 6px #0005; white-space: nowrap; }
+  @keyframes knock { 0%, 70%, 100% { transform: rotate(0) } 74% { transform: rotate(-1.2deg) } 78% { transform: rotate(1.2deg) } 82% { transform: rotate(-1deg) } 86% { transform: rotate(.8deg) } }
+  .doorway.open .door { animation: none; transform: rotateY(-105deg); }
+  .tap-hint { font-size: 16px; color: #fff6e599; animation: bob 1.4s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translateY(-5px) } }
+
+  /* ---------- scene 2: the question ---------- */
+  #ask-scene { padding-top: 22px; }
+  .episode { font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--yellow); }
+  .ep-title { margin-top: 6px; font-size: 17px; color: #fff6e5cc; font-weight: 600; }
+  .big-dotted { margin-top: 18px; font-size: clamp(44px, 14vw, 66px); color: var(--cream); text-shadow: 0 4px 0 #0005; }
+  .flip { margin-top: 26px; width: min(78vw, 300px); perspective: 1200px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .flip-inner { position: relative; display: grid; transition: transform .9s cubic-bezier(.3,1.25,.5,1); transform-style: preserve-3d; transform: rotate(-3deg); }
+  .flip.flipped .flip-inner { transform: rotate(3deg) rotateY(180deg); }
+  .flip .polaroid { grid-area: 1 / 1; margin: 0; width: 100%; transform: none; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .flip .back-side { transform: rotateY(180deg); }
+  .turn-hint { position: absolute; z-index: 3; right: -8px; top: 22px; background: var(--red); color: #fff; font-weight: 800; font-size: 14px; padding: 6px 12px; border-radius: 999px; transform: rotate(6deg); box-shadow: 0 4px 10px #0006; animation: wiggle 1.6s ease-in-out infinite; }
+  @keyframes wiggle { 0%,100% { transform: rotate(6deg) } 50% { transform: rotate(-4deg) scale(1.06) } }
+  .flip-help { margin-top: 14px; font-size: 15px; color: #fff6e5b3; }
+  .polaroid { margin-top: 26px; background: #fff; padding: 12px 12px 46px; width: min(78vw, 300px); transform: rotate(-3deg); box-shadow: 0 18px 40px #0008; position: relative; }
+  .polaroid::before { content: ""; position: absolute; top: -14px; left: 50%; width: 110px; height: 30px; margin-left: -55px; background: #f7c948bb; transform: rotate(4deg); }
+  .polaroid .pic { aspect-ratio: 4 / 5; background: #e9e3f5; overflow: hidden; position: relative; }
+  .polaroid .pic img { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .polaroid .pic .ph { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: #6b5a8c; font-size: 15px; padding: 16px; }
+  .polaroid .pic .ph b { font-size: 46px; }
+  .polaroid figcaption { position: absolute; left: 0; right: 0; bottom: 8px; font-family: "Caveat", cursive; font-size: 24px; color: #333; }
+  .polaroid.fade-in { animation-name: fadeUpTilt; }
+  @keyframes fadeUpTilt { from { opacity: 0; transform: translateY(18px) } to { opacity: 1 } }
+  .question { margin-top: 30px; font-size: clamp(30px, 8.6vw, 42px); font-weight: 900; line-height: 1.12; text-wrap: balance; }
+  .question .names { color: var(--yellow); }
+  .laugh { margin-top: 10px; font-size: 15px; font-style: italic; color: #fff6e580; }
+
+  .buttons { margin-top: 28px; display: flex; flex-direction: column; gap: 18px; justify-content: flex-start; align-items: center; position: relative; width: 100%; min-height: 170px; }
+  .btn { font: inherit; font-weight: 800; border: 0; cursor: pointer; border-radius: 999px; transition: transform .2s; }
+  .btn-yes { font-size: 24px; padding: 16px 40px; background: var(--yellow); color: var(--ink); box-shadow: 0 6px 0 #b8901f, 0 12px 30px #f7c94855; }
+  .btn-yes:active { transform: translateY(4px); box-shadow: 0 2px 0 #b8901f; }
+  .btn-yes.grow { animation: grow .6s ease; }
+  @keyframes grow { 50% { transform: scale(1.12) } }
+  .btn-no { font-size: 17px; padding: 12px 22px; background: transparent; color: #fff6e5cc; border: 2px solid #fff6e555; transition: transform .35s cubic-bezier(.2,1.4,.4,1), font-size .3s; touch-action: manipulation; }
+
+  /* the couch */
+  .couch { margin-top: 36px; width: min(86vw, 360px); }
+
+  /* ---------- scene 3: they said yes ---------- */
+  #yes-scene { padding-top: 26px; }
+  .yes-title { font-size: clamp(40px, 12vw, 60px); color: var(--yellow); text-shadow: 0 4px 0 #0005; animation: pop .7s cubic-bezier(.2,1.6,.4,1); }
+  @keyframes pop { from { transform: scale(.3); opacity: 0 } to { transform: none; opacity: 1 } }
+  .yes-sub { margin-top: 12px; font-size: 20px; color: #fff6e5e6; }
+  .cflip { margin-top: 26px; perspective: 1400px; animation: pop .8s .2s both cubic-bezier(.2,1.4,.4,1); }
+  .cflip-inner { display: grid; transform-style: preserve-3d; transition: transform .9s cubic-bezier(.3,1.2,.5,1); transform: rotate(.6deg); }
+  .cflip.flipped .cflip-inner { transform: rotate(-.6deg) rotateY(180deg); }
+  .cflip .contract { grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .cflip .voucher-side { transform: rotateY(180deg); }
+  .contract { background: var(--cream); color: var(--ink); text-align: left; border-radius: 14px; padding: 22px 20px 26px; box-shadow: 0 18px 40px #0008; position: relative; }
+  .gift-btn { display: block; margin: 20px auto 0; font-size: 15px; padding: 10px 20px; background: var(--red); color: #fff; box-shadow: 0 4px 0 #a83a1c; letter-spacing: .04em; animation: wiggle 1.6s ease-in-out infinite; }
+  .gift-btn.back { background: transparent; color: var(--ink); box-shadow: none; border: 2px solid #2b214033; animation: none; letter-spacing: 0; }
+  .voucher { border: 3px dashed var(--purple); border-radius: 12px; padding: 16px 14px; text-align: center; background: repeating-linear-gradient(45deg, #fff6e5, #fff6e5 12px, #fdeccd 12px, #fdeccd 24px); }
+  .voucher .v-kicker { font-size: 13px; font-weight: 800; letter-spacing: .14em; color: var(--red); }
+  .voucher .v-title { margin-top: 6px; font-size: 26px; font-weight: 900; line-height: 1.1; color: var(--purple-dark); }
+  .voucher .v-sub { margin-top: 8px; font-size: 16px; line-height: 1.4; }
+  .voucher dl { margin-top: 12px; display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; text-align: left; font-size: 15px; }
+  .voucher dt { font-weight: 800; color: var(--purple-dark); }
+  .phoebe { margin-top: 16px; border-radius: 12px; overflow: hidden; background: #2b21401a; transform: rotate(-1deg); box-shadow: 0 8px 20px #0003; }
+  .phoebe img { display: block; width: 100%; height: auto; min-height: 120px; object-fit: cover; }
+  .phoebe small { display: block; font-family: "Caveat", cursive; font-size: 20px; text-align: center; padding: 4px 8px; background: #fff; color: #333; }
+  .contract h2 { font-size: 22px; font-weight: 900; text-align: center; }
+  .contract .small { text-align: center; font-size: 13px; color: #6b5a8c; margin-top: 2px; }
+  .contract ol { margin: 16px 0 0 22px; display: grid; gap: 10px; font-size: 16px; line-height: 1.4; }
+  .contract .sign { margin-top: 22px; display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; }
+  .contract .sign span { font-family: "Caveat", cursive; font-size: 24px; color: #3a2f6b; border-bottom: 1.5px solid #3a2f6b55; padding: 0 6px; }
+  .stamp { position: absolute; right: -8px; top: -18px; border: 4px solid var(--red); color: var(--red); font-weight: 900; font-size: 20px; padding: 4px 12px; border-radius: 8px; transform: rotate(-14deg); opacity: .85; animation: stamp .45s 1s both cubic-bezier(.2,1.6,.4,1); }
+  @keyframes stamp { from { transform: rotate(-14deg) scale(3); opacity: 0 } to { transform: rotate(-14deg) scale(1); opacity: .85 } }
+  .again { margin-top: 26px; font-size: 17px; padding: 12px 24px; background: var(--purple); color: var(--cream); box-shadow: 0 5px 0 var(--purple-dark); }
+
+  .joey { margin: 22px auto 0; width: min(80vw, 320px); border-radius: 16px; overflow: hidden; background: #0003; box-shadow: 0 14px 34px #0007; border: 4px solid var(--yellow); transform: rotate(-1.5deg); }
+  .joey img { display: block; width: 100%; height: auto; min-height: 120px; object-fit: cover; }
+  .joey small { display: block; text-align: right; font-size: 11px; padding: 3px 8px; color: #fff6e599; background: #0006; }
+  .joey.pop { animation: pop .6s cubic-bezier(.2,1.6,.4,1); }
+  .joey-float { position: fixed; left: 50%; top: 50%; z-index: 35; width: min(78vw, 320px); margin: 0; transform: translate(-50%,-50%) rotate(-2deg); display: none; }
+  .joey-float.show { display: block; animation: floatIn .5s cubic-bezier(.2,1.6,.4,1); }
+  @keyframes floatIn { from { transform: translate(-50%,-50%) scale(.4); opacity: 0 } to { transform: translate(-50%,-50%) rotate(-2deg); opacity: 1 } }
+  .caption { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 40; background: #000c; color: #fff; font-size: 15px; padding: 6px 14px; border-radius: 6px; font-style: italic; opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; }
+  .caption.show { opacity: 1; }
+
+  .fade-in { animation: fadeUp .8s both cubic-bezier(.16,1,.3,1); }
+  .d1 { animation-delay: .15s } .d2 { animation-delay: .3s } .d3 { animation-delay: .45s } .d4 { animation-delay: .6s } .d5 { animation-delay: .75s }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(18px) } to { opacity: 1; transform: none } }
+  @media (prefers-reduced-motion: reduce) { .door { animation: none } }
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas>
+<div class="stars"></div>
+
+<div class="wrap">
+  <a class="back" href="index.html">← Înapoi</a>
+
+  <!-- ===================== SCENE 1: the door ===================== -->
+  <section class="scene on" id="door-scene">
+    <!-- EDIT ME -->
+    <p class="knock">Toc, toc! 🚪</p>
+    <p class="knock-sub">Cineva are o întrebare foarte importantă…</p>
+    <div class="doorway" id="doorway" role="button" tabindex="0" aria-label="Deschide ușa">
+      <div class="frame"></div>
+      <div class="door">
+        <div class="panel p1"></div><div class="panel p2"></div>
+        <div class="peephole"></div><div class="knob"></div>
+        <!-- EDIT ME: note stuck on the door -->
+        <div class="sign">Intrați! 💛</div>
+      </div>
+    </div>
+    <p class="tap-hint">👆 Atinge ușa ca să deschizi</p>
+  </section>
+
+  <!-- ===================== SCENE 2: the question ===================== -->
+  <section class="scene" id="ask-scene">
+    <!-- EDIT ME -->
+    <p class="episode fade-in">Season 1 · Episode 1</p>
+    <p class="ep-title fade-in d1">The One Where Lucia and Alexandru Get Asked</p>
+    <div class="big-dotted dotted fade-in d2" aria-label="Nașii">N<i class="dot r"></i>A<i class="dot y"></i>Ș<i class="dot b"></i>I<i class="dot r"></i>I</div>
+
+    <div class="flip fade-in d3" id="flip" role="button" tabindex="0" aria-label="Întoarce poza">
+      <div class="flip-inner">
+        <!-- FRONT: the serious photo. EDIT ME: surprise/photo-front.jpg -->
+        <figure class="polaroid front-side">
+          <div class="pic">
+            <img src="surprise/photo-front.jpg" alt="Noi, serioși"
+                 onerror="this.remove();">
+            <div class="ph"><b>📸</b>Poza serioasă</div>
+          </div>
+          <!-- EDIT ME: caption on the front -->
+          <figcaption>noi, foarte serioși 🧐</figcaption>
+          <span class="turn-hint">Întoarce-mă! 🔄</span>
+        </figure>
+        <!-- BACK: the funny photo. EDIT ME: surprise/photo-back.jpg -->
+        <figure class="polaroid back-side">
+          <div class="pic">
+            <img src="surprise/photo-back.jpg" alt="Noi, de fapt"
+                 onerror="this.remove();">
+            <div class="ph"><b>🤪</b>Poza amuzantă</div>
+          </div>
+          <!-- EDIT ME: caption on the back -->
+          <figcaption>…și noi, de fapt 😘</figcaption>
+        </figure>
+      </div>
+    </div>
+    <p class="flip-help fade-in d3" id="flip-help">👆 Atinge poza ca s-o întorci</p>
+
+    <!-- EDIT ME: the question -->
+    <h1 class="question fade-in d4"><span class="names">Lucia și Alexandru</span>, vreți să fiți nașii noștri?</h1>
+    <p class="laugh fade-in d4">(publicul își ține respirația)</p>
+
+    <div class="buttons fade-in d5" id="buttons">
+      <button class="btn btn-yes" id="yes">DA! 🥂</button>
+      <button class="btn btn-no" id="no">Nu</button>
+    </div>
+
+    <!-- the orange couch -->
+    <svg class="couch fade-in d5" viewBox="0 0 360 150" aria-hidden="true">
+      <ellipse cx="180" cy="142" rx="160" ry="8" fill="#0004"/>
+      <rect x="22" y="22" width="316" height="70" rx="26" fill="#c8641f"/>
+      <rect x="40" y="30" width="90" height="56" rx="16" fill="#e07a2f"/>
+      <rect x="135" y="30" width="90" height="56" rx="16" fill="#e07a2f"/>
+      <rect x="230" y="30" width="90" height="56" rx="16" fill="#e07a2f"/>
+      <rect x="6" y="56" width="52" height="66" rx="20" fill="#d06c25"/>
+      <rect x="302" y="56" width="52" height="66" rx="20" fill="#d06c25"/>
+      <rect x="40" y="78" width="280" height="44" rx="14" fill="#e88a3e"/>
+      <line x1="133" y1="82" x2="133" y2="118" stroke="#c8641f" stroke-width="3"/>
+      <line x1="227" y1="82" x2="227" y2="118" stroke="#c8641f" stroke-width="3"/>
+      <rect x="30" y="120" width="10" height="16" rx="3" fill="#5a3418"/>
+      <rect x="320" y="120" width="10" height="16" rx="3" fill="#5a3418"/>
+      <text x="180" y="66" text-anchor="middle" font-family="Caveat, cursive" font-size="22" fill="#fff6e5">locul vostru e aici ☕</text>
+    </svg>
+  </section>
+
+  <!-- ===================== SCENE 3: they said yes ===================== -->
+  <section class="scene" id="yes-scene">
+    <!-- EDIT ME -->
+    <div class="yes-title dotted" aria-label="Au zis da">AU<i class="dot r"></i>ZIS<i class="dot y"></i>DA!</div>
+    <p class="yes-sub">🎉 Cel mai bun episod de până acum! 🎉</p>
+    <!-- Joey GIFs come from GIPHY (needs internet). Change the IDs in JOEY below. -->
+    <div class="joey pop" id="joey"><img id="joey-img" alt="Joey se bucură" src=""><small>via GIPHY</small></div>
+
+    <div class="cflip" id="cflip">
+      <div class="cflip-inner">
+        <div class="contract">
+          <div class="stamp">APROBAT</div>
+          <!-- EDIT ME: the funny contract -->
+          <h2>📜 Contract de nășie</h2>
+          <p class="small">fără drept de retur · valabil pe viață</p>
+          <ol>
+            <li>Nașii primesc acces nelimitat la canapeaua noastră. Locul din mijloc rămâne al nostru.</li>
+            <li>Cafeaua de duminică devine obligatorie. Noi aducem poveștile, voi aduceți cozonacul.</li>
+            <li>Titlul de „naș” și „nașă” e pe viață. Nu există buton de dezabonare.</li>
+            <li>Orice neînțelegere se rezolvă cu pizza. Nu se negociază.</li>
+            <li>Apăsând „DA”, ați semnat deja. Prea târziu să mai citiți clauzele. 😇</li>
+          </ol>
+          <div class="sign">
+            <span>Lucia ✓</span>
+            <span>Alexandru ✓</span>
+          </div>
+          <!-- EDIT ME: gift button label -->
+          <button class="btn gift-btn" id="gift">🎁 VEZI CADOUL</button>
+        </div>
+
+        <!-- BACK OF THE CONTRACT: the gift. EDIT ME -->
+        <div class="contract voucher-side">
+          <div class="voucher">
+            <p class="v-kicker">🎁 CADOUL VOSTRU</p>
+            <p class="v-title">Voucher pentru masaj<br>💆‍♀️ pentru doi 💆‍♂️</p>
+            <p class="v-sub">Pentru că a fi naș e o meserie grea, o începeți complet relaxați.</p>
+            <dl>
+              <dt>Pentru:</dt><dd>Lucia &amp; Alexandru</dd>
+              <dt>De la:</dt><dd>noi doi, cu drag 💛</dd>
+              <dt>Valabil:</dt><dd>oricând vă dor umerii de la atâtea responsabilități</dd>
+            </dl>
+          </div>
+          <!-- Phoebe GIF from GIPHY (needs internet). Change the id in PHOEBE_GIF below. -->
+          <div class="phoebe"><img id="phoebe-img" alt="Phoebe la masaj"><small>terapeutul vostru vă așteaptă 😌</small></div>
+          <button class="btn gift-btn back" id="gift-back">↩ Înapoi la contract</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn again" id="again">🎆 Mai multe artificii!</button>
+  </section>
+</div>
+
+<canvas id="confetti"></canvas>
+<div class="caption" id="caption"></div>
+<div class="joey joey-float" id="joey-float"><img id="joey-float-img" alt="Joey se bucură"><small>via GIPHY</small></div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------------- subtitles, sitcom style ---------------- */
+  var capT;
+  function caption(text, ms) {
+    var c = $('caption'); c.textContent = text; c.classList.add('show');
+    clearTimeout(capT); capT = setTimeout(function () { c.classList.remove('show'); }, ms || 1800);
+  }
+
+  /* ---------------- fireworks ---------------- */
+  var sky = $('sky'), sctx = sky.getContext('2d'), DPR = Math.min(window.devicePixelRatio || 1, 2);
+  var rockets = [], sparks = [], W, H;
+  function size() {
+    W = innerWidth; H = innerHeight;
+    [sky, $('confetti')].forEach(function (c) { c.width = W * DPR; c.height = H * DPR; c.getContext('2d').setTransform(DPR, 0, 0, DPR, 0, 0); });
+  }
+  size(); addEventListener('resize', size);
+  var COLORS = ['#f7c948', '#e4572e', '#3a86ff', '#ff6fb5', '#7cf29c', '#ffffff', '#b388ff'];
+  function launch(x) {
+    rockets.push({ x: x == null ? W * (0.15 + Math.random() * 0.7) : x, y: H + 10,
+      vx: (Math.random() - .5) * 1.5, vy: -(H * 0.011 + Math.random() * 3.2),
+      c: COLORS[(Math.random() * COLORS.length) | 0] });
+  }
+  function explode(r) {
+    var n = 60 + (Math.random() * 40 | 0), ring = Math.random() < .35;
+    for (var i = 0; i < n; i++) {
+      var a = Math.PI * 2 * i / n, s = ring ? 4.2 : Math.random() * 5 + 1;
+      sparks.push({ x: r.x, y: r.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 1, c: Math.random() < .2 ? '#fff' : r.c });
+    }
+  }
+  var fwOn = false, fwTimer = 0, last = performance.now();
+  function frame(t) {
+    var dt = Math.min(2, (t - last) / 16.7); last = t;
+    sctx.globalCompositeOperation = 'destination-out';
+    sctx.fillStyle = 'rgba(0,0,0,0.22)'; sctx.fillRect(0, 0, W, H);
+    sctx.globalCompositeOperation = 'lighter';
+    if (fwOn && !reduce) { fwTimer -= dt; if (fwTimer <= 0) { launch(); fwTimer = 40 + Math.random() * 50; } }
+    for (var i = rockets.length - 1; i >= 0; i--) {
+      var r = rockets[i]; r.x += r.vx * dt; r.y += r.vy * dt; r.vy += 0.07 * dt;
+      sctx.fillStyle = r.c; sctx.beginPath(); sctx.arc(r.x, r.y, 2.2, 0, 7); sctx.fill();
+      if (r.vy >= -0.6) { explode(r); rockets.splice(i, 1); }
+    }
+    for (var j = sparks.length - 1; j >= 0; j--) {
+      var p = sparks[j]; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 0.05 * dt; p.vx *= 0.985; p.vy *= 0.985; p.life -= 0.012 * dt;
+      if (p.life <= 0) { sparks.splice(j, 1); continue; }
+      sctx.globalAlpha = p.life; sctx.fillStyle = p.c; sctx.beginPath(); sctx.arc(p.x, p.y, 2, 0, 7); sctx.fill();
+    }
+    sctx.globalAlpha = 1;
+    drawConfetti(dt);
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------------- confetti ---------------- */
+  var cctx = $('confetti').getContext('2d'), bits = [];
+  function confetti(n, fromX, fromY) {
+    for (var i = 0; i < n; i++) bits.push({
+      x: fromX == null ? Math.random() * W : fromX, y: fromY == null ? -20 - Math.random() * H * 0.5 : fromY,
+      vx: fromX == null ? (Math.random() - .5) * 2 : (Math.random() - .5) * 16,
+      vy: fromY == null ? Math.random() * 2 + 1 : -Math.random() * 15 - 4,
+      s: Math.random() * 7 + 5, r: Math.random() * 6, vr: (Math.random() - .5) * .3,
+      c: COLORS[i % COLORS.length], w: Math.random() * 10
+    });
+  }
+  function drawConfetti(dt) {
+    cctx.clearRect(0, 0, W, H);
+    for (var i = bits.length - 1; i >= 0; i--) {
+      var b = bits[i]; b.vy += 0.18 * dt; b.vy = Math.min(b.vy, 4.5); b.vx *= 0.99; b.w += 0.1 * dt;
+      b.x += (b.vx + Math.sin(b.w) * 0.8) * dt; b.y += b.vy * dt; b.r += b.vr * dt;
+      if (b.y > H + 30) { bits.splice(i, 1); continue; }
+      cctx.save(); cctx.translate(b.x, b.y); cctx.rotate(b.r); cctx.fillStyle = b.c;
+      cctx.fillRect(-b.s / 2, -b.s / 4, b.s, b.s / 2 * Math.abs(Math.cos(b.w))); cctx.restore();
+    }
+  }
+  requestAnimationFrame(frame);
+
+  /* ---------------- scene 1 → 2: open the door ---------------- */
+  var opened = false;
+  function openDoor() {
+    if (opened) return; opened = true;
+    $('doorway').classList.add('open');
+    caption('🎵 *muzică de început de episod* 🎵', 2200);
+    setTimeout(function () {
+      $('door-scene').classList.remove('on');
+      $('ask-scene').classList.add('on');
+      scrollTo(0, 0);
+      fwOn = true; confetti(90);
+      for (var i = 0; i < 4; i++) setTimeout(launch, i * 250);
+    }, 450);
+  }
+  $('doorway').addEventListener('click', openDoor);
+  $('doorway').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDoor(); } });
+
+  /* ---------------- the "Nu" button that refuses to work ---------------- */
+  // EDIT ME: what the "Nu" button says each time they try to tap it
+  var NO_LINES = ['Sigur? 🥺', 'Mai gândiți-vă…', 'Butonul ăsta e stricat', 'Opțiunea „Nu” nu e disponibilă în sezonul ăsta', 'Hai, că știm că vreți 😏'];
+  var LAUGHS = ['*râsete din public*', '*publicul: uuuuh*', '*aplauze ironice*', '*cineva din public: ZICEȚI DA!*', '*râsete și mai tare*'];
+  var noBtn = $('no'), yesBtn = $('yes'), tries = 0;
+  function dodge(e) {
+    if (e) e.preventDefault();
+    if (tries >= NO_LINES.length) { sayYes(); return; }
+    var box = $('buttons').getBoundingClientRect();
+    var maxX = Math.max(40, (box.width - noBtn.offsetWidth) / 2);
+    noBtn.style.transform = 'translate(' + ((Math.random() * 2 - 1) * maxX) + 'px,' + (Math.random() * 60) + 'px) scale(' + Math.max(.6, 1 - tries * .08) + ')';
+    noBtn.textContent = NO_LINES[tries];
+    caption(LAUGHS[tries % LAUGHS.length]);
+    tries++;
+    yesBtn.style.fontSize = (24 + tries * 3) + 'px';
+    yesBtn.classList.remove('grow'); void yesBtn.offsetWidth; yesBtn.classList.add('grow');
+    if (tries === NO_LINES.length) { noBtn.textContent = 'DA (și ăsta) 🥂'; noBtn.style.transform = 'none'; noBtn.style.background = 'var(--yellow)'; noBtn.style.color = 'var(--ink)'; noBtn.style.borderColor = 'transparent'; }
+  }
+  noBtn.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse' && tries < NO_LINES.length) dodge(e); });
+  noBtn.addEventListener('pointerdown', function (e) { if (tries < NO_LINES.length) dodge(e); });
+  noBtn.addEventListener('click', function (e) { e.preventDefault(); if (tries >= NO_LINES.length) sayYes(); });
+
+  /* ---------------- flip the photo ---------------- */
+  function flip() { $('flip').classList.toggle('flipped'); $('flip-help').textContent = $('flip').classList.contains('flipped') ? '🔄 Atinge din nou pentru poza serioasă' : '👆 Atinge poza ca s-o întorci'; if ($('flip').classList.contains('flipped')) caption('*râsete din public* 😂'); }
+  $('flip').addEventListener('click', flip);
+  $('flip').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
+
+  /* ---------------- Joey GIFs (from GIPHY) ---------------- */
+  // EDIT ME: GIPHY ids. Open a GIF on giphy.com, the id is the last part of its link.
+  var JOEY = {
+    yes: 'f6VfCFyOL5KmiICskp',            // Joey: "YES!"
+    more: ['H1vjPkqdL7liL6O7Bj',          // Joey & Chandler happy dance
+           'lXiRnXRukC71MipmU',           // Chandler jumps off a chair and dances
+           'S3bYAIzFAqS7uD1qM6',          // Joey with balloons
+           'S9iMXx6Lqrr5mJoMxC',          // Chandler dancing on the coffee table
+           '9Q9DYfOELkQIU',               // "best news ever"
+           'zd9wcDX4H4z4I',               // Joey dancing
+           '3o7qDQ4kcSD1PLM3BK',          // Chandler's silly dance
+           'kgfvdwwolJqy9JgptR',          // the gang says cheers
+           'PkR7F7CtbM6P4tM1sb',          // Joey walking in, happy
+           '113PoJxEaRxKbm',              // excited Chandler
+           'YnBntKOgnUSBkV7bQH',          // Phoebe & Rachel jumping
+           'RiVbSiRiECwM8zFUMi',          // victory dance
+           'amkS2AoPLAGg8',               // Chandler dancing
+           'lSbTmUmQwxUmiExV4h',          // Rachel cheerleader
+           'xThuWp2hJABbmc20Ew',          // happy hug
+           'jp9K9GWSV4BYHgOUY6']          // Joey: "ooooh"
+  };
+  function joey(id) {
+    var box = $('joey'), img = $('joey-img');
+    img.onerror = function () { box.style.display = 'none'; };
+    box.style.display = '';
+    img.src = 'https://i.giphy.com/media/' + id + '/giphy.webp';
+    box.classList.remove('pop'); void box.offsetWidth; box.classList.add('pop');
+  }
+
+  /* ---------------- the gift: flip the contract ---------------- */
+  var PHOEBE_GIF = 'Zb5M7qgVKhnBf398D9';   // EDIT ME: Phoebe at her massage table
+  function showGift(on) {
+    var f = $('cflip');
+    if (on) {
+      var img = $('phoebe-img');
+      if (!img.src) { img.onerror = function () { img.parentNode.style.display = 'none'; }; img.src = 'https://i.giphy.com/media/' + PHOEBE_GIF + '/giphy.webp'; }
+      f.classList.add('flipped');
+      caption('*publicul: ooooooh!* 🎁', 2200);
+      confetti(120, W / 2, H * 0.6);
+      launch(W * 0.3); launch(W * 0.7);
+    } else {
+      f.classList.remove('flipped');
+    }
+    setTimeout(function () { var r = f.getBoundingClientRect(); if (r.top < 0 || r.top > H * 0.5) scrollTo({ top: scrollY + r.top - 80, behavior: 'smooth' }); }, 300);
+  }
+  $('gift').addEventListener('click', function () { showGift(true); });
+  $('gift-back').addEventListener('click', function () { showGift(false); });
+
+  var floatT;
+  function floatJoey(id) {
+    var box = $('joey-float'), img = $('joey-float-img');
+    img.onerror = function () { box.classList.remove('show'); };
+    img.src = 'https://i.giphy.com/media/' + id + '/giphy.webp';
+    box.classList.remove('show'); void box.offsetWidth; box.classList.add('show');
+    clearTimeout(floatT); floatT = setTimeout(function () { box.classList.remove('show'); }, 3800);
+  }
+  $('joey-float').addEventListener('click', function () { this.classList.remove('show'); });
+
+  /* ---------------- scene 2 → 3: they said yes ---------------- */
+  function finale() {
+    var cx = W / 2;
+    for (var i = 0; i < 10; i++) setTimeout(function () { launch(cx + (Math.random() - .5) * W * 0.8); }, i * 160);
+    confetti(160, cx, H * 0.55); confetti(120);
+  }
+  function sayYes() {
+    $('ask-scene').classList.remove('on');
+    $('yes-scene').classList.add('on');
+    scrollTo({ top: 0 });
+    caption('👏 *aplauze furtunoase* 👏', 2600);
+    joey(JOEY.yes);
+    finale();
+    setTimeout(function () { confetti(100); }, 1400);
+  }
+  yesBtn.addEventListener('click', sayYes);
+  // EDIT ME: what appears each time they tap the fireworks button
+  var MORE = [
+    '*publicul înnebunește* 🎆',
+    '*cineva și-a vărsat cafeaua de emoție* ☕',
+    '*aplauze în picioare* 👏',
+    '*bunica din rândul 3 plânge de fericire* 🥲',
+    '*cineva din public strigă: SĂ TRĂIȚI, NAȘII!*',
+    '*vecinii au chemat poliția. A meritat.* 🚓',
+    '*regizorul zice că s-a terminat bugetul de artificii. Îl ignorăm.*',
+    '*Joey aprobă* 👍',
+    '*publicul cere bis* 🔁',
+    '*s-a confirmat sezonul 2* 📺',
+    '*cineva a început să danseze pe canapea* 🛋️',
+    '*fluierături și „uuuuuh” prelung*'
+  ];
+  var LABELS = ['🎆 Mai multe artificii!', '🎆 Încă!', '🎆 Și mai multe!', '🎆 Nu ne oprim!', '🎆 BIS!', '🎆 Încă o dată, cu sentiment!'];
+  var moreN = 0;
+  $('again').addEventListener('click', function () {
+    finale();
+    caption(MORE[moreN % MORE.length], 2600);
+    floatJoey(JOEY.more[moreN % JOEY.more.length]);
+    moreN++;
+    $('again').textContent = LABELS[moreN % LABELS.length];
+  });
+})();
+</script>
+</body>
+</html>
