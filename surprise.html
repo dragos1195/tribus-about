@@ -186,7 +186,8 @@
   .baby-ep { margin-top: 10px; color: #c2410c; }
   .baby-ep-title { color: #2b2140b3; }
   .baby-title { margin-top: 14px; color: var(--ink); text-shadow: 0 4px 0 #fff8; }
-  #baby-scene .flip { margin-top: 30px; }
+  #baby-scene .baby-photo { margin-top: 30px; transform: none; }
+  #baby-scene .baby-photo::before { transform: none; }
   #baby-scene .polaroid { box-shadow: 0 18px 40px #b4530044; }
   #baby-scene .polaroid::before { background: #ffffffaa; }
   .baby-note { margin-top: 34px; text-align: center; font-size: 18px; line-height: 1.5; display: grid; gap: 14px; }
@@ -205,17 +206,9 @@
   .joey-float.show { display: block; animation: floatIn .5s cubic-bezier(.2,1.6,.4,1) both; }
   .joey.loading { visibility: hidden; }
   @keyframes floatIn { from { transform: translate(-50%,-50%) scale(.4); opacity: 0 } to { transform: translate(-50%,-50%) rotate(-2deg); opacity: 1 } }
-  /* theme song: a tiny YouTube player. If the phone refuses to start it from the
-     door tap, the little player shows in the corner so one tap on it starts it. */
-  .music { position: fixed; left: 12px; bottom: max(14px, env(safe-area-inset-bottom)); z-index: 45; display: none; align-items: center; gap: 8px; }
-  .music.on { display: flex; }
-  .music-btn { width: 44px; height: 44px; border-radius: 50%; border: 0; font-size: 20px; background: #000a; color: #fff; box-shadow: 0 4px 12px #0005; cursor: pointer; }
-  .yt-box { width: 112px; height: 63px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 14px #0007; border: 2px solid var(--yellow); background: #000; position: relative; }
-  .yt-box iframe { width: 100%; height: 100%; display: block; border: 0; }
-  .music.playing .yt-box { position: fixed; left: 0; bottom: 0; width: 2px; height: 2px; opacity: .01; border: 0; pointer-events: none; }
-  .music:not(.playing) .music-btn { display: none; }
-  .yt-tip { font-size: 13px; font-weight: 700; background: #000c; color: #fff; padding: 6px 10px; border-radius: 999px; }
-  .music.playing .yt-tip { display: none; }
+  /* theme song + its pause button */
+  .music-btn { position: fixed; left: 12px; bottom: max(14px, env(safe-area-inset-bottom)); z-index: 45; display: none; width: 44px; height: 44px; border-radius: 50%; border: 0; font-size: 20px; background: #000a; color: #fff; box-shadow: 0 4px 12px #0005; cursor: pointer; }
+  .music-btn.on { display: block; }
   .caption { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 40; background: #000c; color: #fff; font-size: 15px; padding: 6px 14px; border-radius: 6px; font-style: italic; opacity: 0; transition: opacity .3s; pointer-events: none; width: max-content; max-width: calc(100vw - 32px); text-align: center; line-height: 1.35; text-wrap: balance; overflow-wrap: anywhere; bottom: max(22px, env(safe-area-inset-bottom)); }
   .caption.show { opacity: 1; }
 
@@ -375,29 +368,14 @@
     <p class="ep-title baby-ep-title">The One With the Baby on the Way</p>
     <div class="big-dotted dotted baby-title" aria-label="Bebe">B<i class="dot r"></i>E<i class="dot b"></i>B<i class="dot r"></i>E</div>
 
-    <div class="flip" id="baby-flip" role="button" tabindex="0" aria-label="Întoarce poza">
-      <div class="flip-inner">
-        <!-- FRONT. EDIT ME: surprise/photo-kids.jpg -->
-        <figure class="polaroid front-side">
-          <div class="pic">
-            <img src="surprise/photo-kids.jpg" alt="Noi, de mici" onerror="this.remove();">
-            <div class="ph"><b>🧸</b>Poza de când eram mici</div>
-          </div>
-          <!-- EDIT ME: caption on the front -->
-          <figcaption>o așteptăm cu drag 💛</figcaption>
-          <span class="turn-hint">Întoarce-mă! 🔄</span>
-        </figure>
-        <!-- BACK. EDIT ME: surprise/photo-kids-2.jpg -->
-        <figure class="polaroid back-side">
-          <div class="pic">
-            <img src="surprise/photo-kids-2.jpg" alt="Noi, de mici, din nou" onerror="this.remove();">
-            <div class="ph"><b>🧸</b>A doua poză</div>
-          </div>
-          <!-- EDIT ME: caption on the back -->
-          <figcaption>…și o iubim deja 🎀</figcaption>
-        </figure>
+    <!-- EDIT ME: photo surprise/photo-kids.jpg and its caption -->
+    <figure class="polaroid baby-photo">
+      <div class="pic">
+        <img src="surprise/photo-kids.jpg" alt="Noi, de mici" onerror="this.remove();">
+        <div class="ph"><b>🧸</b>Poza de când eram mici</div>
       </div>
-    </div>
+      <figcaption>o așteptăm cu drag 💛</figcaption>
+    </figure>
 
     <!-- EDIT ME: the message -->
     <div class="baby-note">
@@ -416,12 +394,9 @@
 
 <canvas id="confetti"></canvas>
 <div class="caption" id="caption"></div>
-<!-- Friends theme song, played from YouTube (needs internet). EDIT ME: THEME_VIDEOS in the script. -->
-<div class="music" id="music">
-  <div class="yt-box"><div id="yt"></div></div>
-  <span class="yt-tip">🎵 Atinge pentru muzică</span>
-  <button class="music-btn" id="music-btn" aria-label="Oprește muzica">🔊</button>
-</div>
+<!-- Friends theme song. EDIT ME: replace surprise/theme.mp3 to change it -->
+<audio id="theme" src="surprise/theme.mp3" preload="auto" loop playsinline></audio>
+<button class="music-btn" id="music-btn" aria-label="Oprește muzica">🔊</button>
 <div class="joey joey-float" id="joey-float"><img id="joey-float-img" alt="Joey se bucură"><small>via GIPHY</small></div>
 
 <script>
@@ -504,39 +479,17 @@
 
   /* ---------------- scene 1 → 2: open the door ---------------- */
   var opened = false;
-  /* ---------------- the theme song (YouTube) ---------------- */
-  // EDIT ME: YouTube ids of "I'll Be There for You" (the first one that allows embedding is used)
-  var THEME_VIDEOS = ['CXnEgbDcITo', 'q-9kPks0IfE', 'S8PNXgLhkT0'];
-  var yt = null, ytReady = false, ytTry = 0, wantMusic = false, muted = false;
-  window.onYouTubeIframeAPIReady = function () {
-    yt = new YT.Player('yt', {
-      videoId: THEME_VIDEOS[0],
-      playerVars: { playsinline: 1, controls: 0, disablekb: 1, rel: 0, modestbranding: 1, loop: 1, playlist: THEME_VIDEOS[0] },
-      events: {
-        onReady: function () { ytReady = true; yt.setVolume(70); if (wantMusic) startMusic(); },
-        onStateChange: function (e) {
-          if (e.data === 1) $('music').classList.add('playing');           // playing
-          if (e.data === 0) { yt.seekTo(0); yt.playVideo(); }              // ended: loop
-        },
-        onError: function () {                                           // not embeddable: try the next one
-          if (++ytTry < THEME_VIDEOS.length) yt.loadVideoById(THEME_VIDEOS[ytTry]);
-          else $('music').style.display = 'none';                         // none worked: hide quietly
-        }
-      }
-    });
-  };
-  (function () { var t = document.createElement('script'); t.src = 'https://www.youtube.com/iframe_api'; t.async = true; t.onerror = function () { $('music').style.display = 'none'; }; document.head.appendChild(t); })();
-  setTimeout(function () { if (!ytReady) $('music').style.display = 'none'; }, 15000);   // YouTube unreachable
+  /* ---------------- the theme song ---------------- */
+  var theme = $('theme'), muted = false;
+  theme.volume = 0.7;
   function startMusic() {
-    wantMusic = true;
-    $('music').classList.add('on');
-    if (!ytReady) return;
-    try { yt.unMute(); yt.playVideo(); } catch (e) {}
+    var p = theme.play();
+    $('music-btn').classList.add('on');
+    if (p && p.catch) p.catch(function () { muted = true; $('music-btn').textContent = '🔇'; });
   }
   $('music-btn').addEventListener('click', function () {
-    if (!yt || !ytReady) return;
     muted = !muted;
-    if (muted) yt.pauseVideo(); else yt.playVideo();
+    if (muted) theme.pause(); else theme.play();
     this.textContent = muted ? '🔇' : '🔊';
     this.setAttribute('aria-label', muted ? 'Pornește muzica' : 'Oprește muzica');
   });
@@ -777,12 +730,6 @@
   });
   function leaveBaby() { goScene('yes-scene', 300); }
   $('baby-back').addEventListener('click', leaveBaby);
-  function babyFlip() {
-    var el = $('baby-flip'), toBack = !el.classList.contains('flipped');
-    if (turnCard(el, toBack, 3) && toBack) caption('*publicul: awww, ce mici erau* 🥹');
-  }
-  $('baby-flip').addEventListener('click', babyFlip);
-  $('baby-flip').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); babyFlip(); } });
   var babyN = 0;
   $('baby-gif').addEventListener('click', function () {
     caption(BABY_LINES[babyN % BABY_LINES.length], 2600);

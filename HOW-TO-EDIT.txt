@@ -8,7 +8,7 @@ Edit the surprise
     contract, the captions for the fireworks button and the Joey GIFs.
   - Photos: surprise/photo-front.jpg (serious, front) and
     surprise/photo-back.jpg (funny, back). The baby page uses
-    surprise/photo-kids.jpg (front) and surprise/photo-kids-2.jpg (back). Replace the files to change them.
+    surprise/photo-kids.jpg. Replace the files to change them.
     Portrait 4:5 looks best.
   - Joey GIFs come from GIPHY, so they need an internet connection. To swap one,
     open a GIF on giphy.com and copy the id (the last part of its link) into the
@@ -22,9 +22,8 @@ Your profile page (dragos.html)
 What triggers what
   - On the last screen, the 🍼 button opens the sunny baby page. Its text and
     the baby GIFs behind the 🧸 button (BABY_GIFS) are marked EDIT ME.
-  - The Friends theme plays from YouTube from the door tap on (THEME_VIDEOS).
-    If a phone won't start it on its own, a small player shows bottom-left:
-    one tap on it starts the music. The 🔊 button pauses it.
+  - The Friends theme (surprise/theme.mp3) starts with the door tap and loops.
+    The 🔊 button bottom-left pauses it. Replace the file to change the song.
   - On index.html, tapping Lucia's card opens surprise.html.
   - Tapping Dragoș's card opens dragos.html, the serious profile page. Everything else on index.html looks and behaves like the real
     About page; the menu and other links go to the real wearetribus.com.
