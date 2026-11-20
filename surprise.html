@@ -86,10 +86,10 @@
   @keyframes bob { 50% { transform: translateY(-5px) } }
 
   /* ---------- scene 2: the question ---------- */
-  #ask-scene { padding-top: 22px; }
-  .episode { font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--yellow); }
+  #ask-scene { padding-top: 10px; }
+  .episode { margin-top: 16px; font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--yellow); }
   .ep-title { margin-top: 6px; font-size: 17px; color: #fff6e5cc; font-weight: 600; }
-  .big-dotted { margin-top: 18px; font-size: clamp(44px, 14vw, 66px); color: var(--cream); text-shadow: 0 4px 0 #0005; }
+  .big-dotted { margin-top: 0; font-size: clamp(44px, 14vw, 66px); color: var(--cream); text-shadow: 0 4px 0 #0005; }
   .flip { margin-top: 26px; width: min(78vw, 300px); perspective: 1200px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
   .flip-inner { position: relative; display: grid; transition: transform .9s cubic-bezier(.3,1.25,.5,1); transform-style: preserve-3d; transform: rotate(-3deg); }
   .flip.flipped .flip-inner { transform: rotate(3deg) rotateY(180deg); }
@@ -128,7 +128,7 @@
   @keyframes pop { from { transform: scale(.3); opacity: 0 } to { transform: none; opacity: 1 } }
   .yes-sub { margin-top: 12px; font-size: 20px; color: #fff6e5e6; }
   .cflip { margin-top: 26px; perspective: 1400px; animation: pop .8s .2s both cubic-bezier(.2,1.4,.4,1); }
-  .cflip-inner { display: grid; transform-style: preserve-3d; transition: transform .9s cubic-bezier(.3,1.2,.5,1); transform: rotate(.6deg); }
+  .cflip-inner { display: grid; align-items: start; transform-style: preserve-3d; transition: transform .9s cubic-bezier(.3,1.2,.5,1), height .55s cubic-bezier(.3,1,.5,1); transform: rotate(.6deg); }
   .cflip.flipped .cflip-inner { transform: rotate(-.6deg) rotateY(180deg); }
   .cflip .contract { grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
   .cflip .voucher-side { transform: rotateY(180deg); }
@@ -158,9 +158,10 @@
   .joey small { display: block; text-align: right; font-size: 11px; padding: 3px 8px; color: #fff6e599; background: #0006; }
   .joey.pop { animation: pop .6s cubic-bezier(.2,1.6,.4,1); }
   .joey-float { position: fixed; left: 50%; top: 50%; z-index: 35; width: min(78vw, 320px); margin: 0; transform: translate(-50%,-50%) rotate(-2deg); display: none; }
-  .joey-float.show { display: block; animation: floatIn .5s cubic-bezier(.2,1.6,.4,1); }
+  .joey-float.show { display: block; animation: floatIn .5s cubic-bezier(.2,1.6,.4,1) both; }
+  .joey.loading { visibility: hidden; }
   @keyframes floatIn { from { transform: translate(-50%,-50%) scale(.4); opacity: 0 } to { transform: translate(-50%,-50%) rotate(-2deg); opacity: 1 } }
-  .caption { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 40; background: #000c; color: #fff; font-size: 15px; padding: 6px 14px; border-radius: 6px; font-style: italic; opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; }
+  .caption { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 40; background: #000c; color: #fff; font-size: 15px; padding: 6px 14px; border-radius: 6px; font-style: italic; opacity: 0; transition: opacity .3s; pointer-events: none; width: max-content; max-width: calc(100vw - 32px); text-align: center; line-height: 1.35; text-wrap: balance; overflow-wrap: anywhere; bottom: max(22px, env(safe-area-inset-bottom)); }
   .caption.show { opacity: 1; }
 
   .fade-in { animation: fadeUp .8s both cubic-bezier(.16,1,.3,1); }
@@ -196,9 +197,9 @@
   <!-- ===================== SCENE 2: the question ===================== -->
   <section class="scene" id="ask-scene">
     <!-- EDIT ME -->
-    <p class="episode fade-in">Season 1 · Episode 1</p>
-    <p class="ep-title fade-in d1">The One Where Lucia and Alexandru Get Asked</p>
-    <div class="big-dotted dotted fade-in d2" aria-label="Nașii">N<i class="dot r"></i>A<i class="dot y"></i>Ș<i class="dot b"></i>I<i class="dot r"></i>I</div>
+    <div class="big-dotted dotted fade-in" aria-label="Nașii">N<i class="dot r"></i>A<i class="dot y"></i>Ș<i class="dot b"></i>I<i class="dot r"></i>I</div>
+    <p class="episode fade-in d1">Season 1 · Episode 1</p>
+    <p class="ep-title fade-in d2">The One Where Lucia and Alexandru Get Asked</p>
 
     <div class="flip fade-in d3" id="flip" role="button" tabindex="0" aria-label="Întoarce poza">
       <div class="flip-inner">
@@ -260,7 +261,7 @@
     <div class="yes-title dotted" aria-label="Au zis da">AU<i class="dot r"></i>ZIS<i class="dot y"></i>DA!</div>
     <p class="yes-sub">🎉 Cel mai bun episod de până acum! 🎉</p>
     <!-- Joey GIFs come from GIPHY (needs internet). Change the IDs in JOEY below. -->
-    <div class="joey pop" id="joey"><img id="joey-img" alt="Joey se bucură" src=""><small>via GIPHY</small></div>
+    <div class="joey" id="joey" style="display:none"><img id="joey-img" alt="Joey se bucură"><small>via GIPHY</small></div>
 
     <div class="cflip" id="cflip">
       <div class="cflip-inner">
@@ -280,8 +281,8 @@
             <span>Lucia ✓</span>
             <span>Alexandru ✓</span>
           </div>
-          <!-- EDIT ME: gift button label -->
-          <button class="btn gift-btn" id="gift">🎁 VEZI CADOUL</button>
+          <!-- EDIT ME: label of the button that flips the contract -->
+          <button class="btn gift-btn" id="gift">👀 CLAUZA SECRETĂ</button>
         </div>
 
         <!-- BACK OF THE CONTRACT: the gift. EDIT ME -->
@@ -400,6 +401,7 @@
       $('ask-scene').classList.add('on');
       scrollTo(0, 0);
       fwOn = true; confetti(90);
+      preloadGifs();
       for (var i = 0; i < 4; i++) setTimeout(launch, i * 250);
     }, 450);
   }
@@ -454,21 +456,62 @@
            'xThuWp2hJABbmc20Ew',          // happy hug
            'jp9K9GWSV4BYHgOUY6']          // Joey: "ooooh"
   };
+  // GIFs are downloaded in the background first and only shown once fully
+  // loaded, so they never pop in empty, flash the previous GIF or jump in size.
+  var gifCache = {};
+  function gifUrl(id) { return 'https://i.giphy.com/media/' + id + '/giphy.webp'; }
+  function loadGif(id, done) {
+    var c = gifCache[id];
+    if (!c) {
+      var im = new Image();
+      c = gifCache[id] = { ok: null, cbs: [], im: im };
+      im.onload = function () { c.ok = true; c.cbs.forEach(function (f) { f(true); }); c.cbs = []; };
+      im.onerror = function () { c.ok = false; c.cbs.forEach(function (f) { f(false); }); c.cbs = []; };
+      im.src = gifUrl(id);
+    }
+    if (!done) return;
+    if (c.ok === null) c.cbs.push(done); else done(c.ok);
+  }
+  function preloadGifs() {
+    loadGif(JOEY.yes); loadGif(PHOEBE_GIF);
+    JOEY.more.slice(0, 4).forEach(function (id) { loadGif(id); });
+  }
+  // put the already-loaded image into the box (no second download, no flash)
+  function putGif(box, id) {
+    var old = box.querySelector('img'), im = gifCache[id].im;
+    if (old === im) return;
+    im.alt = old.alt; im.id = old.id;
+    box.replaceChild(im, old);
+  }
   function joey(id) {
-    var box = $('joey'), img = $('joey-img');
-    img.onerror = function () { box.style.display = 'none'; };
-    box.style.display = '';
-    img.src = 'https://i.giphy.com/media/' + id + '/giphy.webp';
-    box.classList.remove('pop'); void box.offsetWidth; box.classList.add('pop');
+    var box = $('joey');
+    loadGif(id, function (ok) {
+      if (!ok) { box.style.display = 'none'; return; }
+      putGif(box, id);
+      box.style.display = '';
+      box.classList.remove('pop'); void box.offsetWidth; box.classList.add('pop');
+    });
   }
 
   /* ---------------- the gift: flip the contract ---------------- */
   var PHOEBE_GIF = 'Zb5M7qgVKhnBf398D9';   // EDIT ME: Phoebe at her massage table
+  // Each side of the contract keeps its own height: the card is sized to
+  // whichever side is facing up, and resizes smoothly when flipped.
+  function fitContract() {
+    var f = $('cflip'), side = f.querySelector(f.classList.contains('flipped') ? '.voucher-side' : '.contract:not(.voucher-side)');
+    if (side.offsetHeight) f.firstElementChild.style.height = side.offsetHeight + 'px';
+  }
+  if (window.ResizeObserver) { var ro = new ResizeObserver(fitContract); [].forEach.call(document.querySelectorAll('.cflip .contract'), function (el) { ro.observe(el); }); }
+  else addEventListener('resize', fitContract);
   function showGift(on) {
     var f = $('cflip');
     if (on) {
       var img = $('phoebe-img');
-      if (!img.src) { img.onerror = function () { img.parentNode.style.display = 'none'; }; img.src = 'https://i.giphy.com/media/' + PHOEBE_GIF + '/giphy.webp'; }
+      if (!img.src) {
+        img.onerror = function () { img.parentNode.style.display = 'none'; fitContract(); };
+        img.onload = fitContract;
+        img.src = gifUrl(PHOEBE_GIF);
+      }
       f.classList.add('flipped');
       caption('*publicul: ooooooh!* 🎁', 2200);
       confetti(120, W / 2, H * 0.6);
@@ -476,18 +519,25 @@
     } else {
       f.classList.remove('flipped');
     }
+    fitContract();
     setTimeout(function () { var r = f.getBoundingClientRect(); if (r.top < 0 || r.top > H * 0.5) scrollTo({ top: scrollY + r.top - 80, behavior: 'smooth' }); }, 300);
   }
   $('gift').addEventListener('click', function () { showGift(true); });
   $('gift-back').addEventListener('click', function () { showGift(false); });
 
   var floatT;
-  function floatJoey(id) {
-    var box = $('joey-float'), img = $('joey-float-img');
-    img.onerror = function () { box.classList.remove('show'); };
-    img.src = 'https://i.giphy.com/media/' + id + '/giphy.webp';
-    box.classList.remove('show'); void box.offsetWidth; box.classList.add('show');
-    clearTimeout(floatT); floatT = setTimeout(function () { box.classList.remove('show'); }, 3800);
+  var floatN = 0;
+  function floatJoey(id, next) {
+    var box = $('joey-float'), n = ++floatN;
+    clearTimeout(floatT);
+    box.classList.remove('show');
+    loadGif(id, function (ok) {
+      if (n !== floatN || !ok) return;   // a newer tap won, or the GIF failed
+      putGif(box, id);
+      void box.offsetWidth; box.classList.add('show');
+      floatT = setTimeout(function () { box.classList.remove('show'); }, 3800);
+    });
+    if (next) loadGif(next);              // get the following GIF ready
   }
   $('joey-float').addEventListener('click', function () { this.classList.remove('show'); });
 
@@ -503,6 +553,7 @@
     scrollTo({ top: 0 });
     caption('👏 *aplauze furtunoase* 👏', 2600);
     joey(JOEY.yes);
+    fitContract();
     finale();
     setTimeout(function () { confetti(100); }, 1400);
   }
@@ -527,7 +578,7 @@
   $('again').addEventListener('click', function () {
     finale();
     caption(MORE[moreN % MORE.length], 2600);
-    floatJoey(JOEY.more[moreN % JOEY.more.length]);
+    floatJoey(JOEY.more[moreN % JOEY.more.length], JOEY.more[(moreN + 1) % JOEY.more.length]);
     moreN++;
     $('again').textContent = LABELS[moreN % LABELS.length];
   });
