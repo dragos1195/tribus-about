@@ -91,10 +91,13 @@
   .ep-title { margin-top: 6px; font-size: 17px; color: #fff6e5cc; font-weight: 600; }
   .big-dotted { margin-top: 0; font-size: clamp(44px, 14vw, 66px); color: var(--cream); text-shadow: 0 4px 0 #0005; }
   .flip { margin-top: 26px; width: min(78vw, 300px); perspective: 1200px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-  .flip-inner { position: relative; display: grid; transition: transform .9s cubic-bezier(.3,1.25,.5,1); transform-style: preserve-3d; transform: rotate(-3deg); }
-  .flip.flipped .flip-inner { transform: rotate(3deg) rotateY(180deg); }
-  .flip .polaroid { grid-area: 1 / 1; margin: 0; width: 100%; transform: none; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-  .flip .back-side { transform: rotateY(180deg); }
+  .flip-inner { position: relative; display: grid; transform: rotate(-3deg); }
+  .flip.flipped .flip-inner { transform: rotate(3deg); }
+  .flip .polaroid { grid-area: 1 / 1; margin: 0; width: 100%; transform: none; }
+  /* Only the side facing up is shown; the JS turns the card edge-on,
+     swaps the side, then turns it back (works on every phone browser). */
+  .flip .back-side, .flip.flipped .front-side { visibility: hidden; }
+  .flip.flipped .back-side { visibility: visible; }
   .turn-hint { position: absolute; z-index: 3; right: -8px; top: 22px; background: var(--red); color: #fff; font-weight: 800; font-size: 14px; padding: 6px 12px; border-radius: 999px; transform: rotate(6deg); box-shadow: 0 4px 10px #0006; animation: wiggle 1.6s ease-in-out infinite; }
   @keyframes wiggle { 0%,100% { transform: rotate(6deg) } 50% { transform: rotate(-4deg) scale(1.06) } }
   .flip-help { margin-top: 14px; font-size: 15px; color: #fff6e5b3; }
@@ -128,10 +131,11 @@
   @keyframes pop { from { transform: scale(.3); opacity: 0 } to { transform: none; opacity: 1 } }
   .yes-sub { margin-top: 12px; font-size: 20px; color: #fff6e5e6; }
   .cflip { margin-top: 26px; perspective: 1400px; animation: pop .8s .2s both cubic-bezier(.2,1.4,.4,1); }
-  .cflip-inner { display: grid; align-items: start; transform-style: preserve-3d; transition: transform .9s cubic-bezier(.3,1.2,.5,1), height .55s cubic-bezier(.3,1,.5,1); transform: rotate(.6deg); }
-  .cflip.flipped .cflip-inner { transform: rotate(-.6deg) rotateY(180deg); }
-  .cflip .contract { grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-  .cflip .voucher-side { transform: rotateY(180deg); }
+  .cflip-inner { display: grid; align-items: start; transition: height .55s cubic-bezier(.3,1,.5,1); transform: rotate(.6deg); }
+  .cflip.flipped .cflip-inner { transform: rotate(-.6deg); }
+  .cflip .contract { grid-area: 1 / 1; }
+  .cflip .voucher-side, .cflip.flipped .contract:not(.voucher-side) { visibility: hidden; }
+  .cflip.flipped .voucher-side { visibility: visible; }
   .contract { background: var(--cream); color: var(--ink); text-align: left; border-radius: 14px; padding: 22px 20px 26px; box-shadow: 0 18px 40px #0008; position: relative; }
   .gift-btn { display: block; margin: 20px auto 0; font-size: 15px; padding: 10px 20px; background: var(--red); color: #fff; box-shadow: 0 4px 0 #a83a1c; letter-spacing: .04em; animation: wiggle 1.6s ease-in-out infinite; }
   .gift-btn.back { background: transparent; color: var(--ink); box-shadow: none; border: 2px solid #2b214033; animation: none; letter-spacing: 0; }
@@ -430,8 +434,36 @@
   noBtn.addEventListener('pointerdown', function (e) { if (tries < NO_LINES.length) dodge(e); });
   noBtn.addEventListener('click', function (e) { e.preventDefault(); if (tries >= NO_LINES.length) sayYes(); });
 
+  /* ---------------- turning a card over ----------------
+     Turn it edge-on, swap which side is showing, turn it back. */
+  function turnCard(el, toBack, tilt, after) {
+    var inner = el.firstElementChild, ease = 'height .55s cubic-bezier(.3,1,.5,1)';
+    if (el._turning || el.classList.contains('flipped') === toBack) return false;
+    if (reduce) { el.classList.toggle('flipped', toBack); if (after) after(); return true; }
+    el._turning = true;
+    var from = toBack ? tilt : -tilt, to = toBack ? -tilt : tilt;
+    inner.style.transition = 'transform .25s cubic-bezier(.5,0,.9,.6), ' + ease;
+    inner.style.transform = 'perspective(1200px) rotate(' + from + 'deg) rotateY(90deg)';
+    setTimeout(function () {
+      el.classList.toggle('flipped', toBack);
+      if (after) after();
+      inner.style.transition = 'none';
+      inner.style.transform = 'perspective(1200px) rotate(' + to + 'deg) rotateY(-90deg)';
+      void inner.offsetWidth;
+      inner.style.transition = 'transform .5s cubic-bezier(.2,1.35,.45,1), ' + ease;
+      inner.style.transform = 'perspective(1200px) rotate(' + to + 'deg) rotateY(0deg)';
+      setTimeout(function () { inner.style.transition = ''; inner.style.transform = ''; el._turning = false; }, 520);
+    }, 250);
+    return true;
+  }
+
   /* ---------------- flip the photo ---------------- */
-  function flip() { $('flip').classList.toggle('flipped'); $('flip-help').textContent = $('flip').classList.contains('flipped') ? '🔄 Atinge din nou pentru poza serioasă' : '👆 Atinge poza ca s-o întorci'; if ($('flip').classList.contains('flipped')) caption('*râsete din public* 😂'); }
+  function flip() {
+    var toBack = !$('flip').classList.contains('flipped');
+    if (!turnCard($('flip'), toBack, 3)) return;
+    $('flip-help').textContent = toBack ? '🔄 Atinge din nou pentru poza serioasă' : '👆 Atinge poza ca s-o întorci';
+    if (toBack) caption('*râsete din public* 😂');
+  }
   $('flip').addEventListener('click', flip);
   $('flip').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
 
@@ -512,14 +544,13 @@
         img.onload = fitContract;
         img.src = gifUrl(PHOEBE_GIF);
       }
-      f.classList.add('flipped');
+      if (!turnCard(f, true, .6, fitContract)) return;
       caption('*publicul: ooooooh!* 🎁', 2200);
       confetti(120, W / 2, H * 0.6);
       launch(W * 0.3); launch(W * 0.7);
     } else {
-      f.classList.remove('flipped');
+      if (!turnCard(f, false, .6, fitContract)) return;
     }
-    fitContract();
     setTimeout(function () { var r = f.getBoundingClientRect(); if (r.top < 0 || r.top > H * 0.5) scrollTo({ top: scrollY + r.top - 80, behavior: 'smooth' }); }, 300);
   }
   $('gift').addEventListener('click', function () { showGift(true); });
